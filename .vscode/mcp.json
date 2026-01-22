@@ -1,0 +1,63 @@
+{
+	"servers": {
+		"AdygGIS_supabase": {
+			"type": "http",
+			"url": "https://mcp.supabase.com/mcp?project_ref=hdyrkjhetzayeucvqiao"
+		},
+		"Obrazz_supabase": {
+			"type": "http",
+			"url": "https://mcp.supabase.com/mcp?project_ref=oyyzncjezesrdxxowdrx"
+		},
+		"SpecsVibeCode_supabase(ARTFROST2)": {
+			"type": "http",
+			"url": "https://mcp.supabase.com/mcp?project_ref=aaiygrlxatiurxnabtjk"
+		},
+		"Shallow_render": {
+			"url": "https://mcp.render.com/mcp",
+			"headers": {
+				"Authorization": "Bearer rnd_fqr2AP8pCcxWuwK2ap2fGE3OeOyl"
+			},
+			"type": "http"
+		},
+		"SpecsVC_render": {
+			"url": "https://mcp.render.com/mcp",
+			"headers": {
+				"Authorization": "Bearer rnd_wj9vYSFRPgabYYMm554WDTndUekT"
+			},
+			"type": "http"
+		},
+		"io.github.ChromeDevTools/chrome-devtools-mcp": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"chrome-devtools-mcp@0.13.0"
+			],
+			"gallery": "https://api.mcp.github.com",
+			"version": "0.13.0"
+		},
+		"io.github.upstash/context7": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"@upstash/context7-mcp@1.0.31"
+			],
+			"env": {
+				"CONTEXT7_API_KEY": "${input:CONTEXT7_API_KEY}"
+			},
+			"gallery": "https://api.mcp.github.com",
+			"version": "1.0.31"
+		},
+		"supabase": {
+      		"type": "http",
+      		"url": "https://mcp.supabase.com/mcp?project_ref=yhkdapcgxmvfyvxgeayd"
+    	}
+	},
+	"inputs": [
+		{
+			"id": "CONTEXT7_API_KEY",
+			"type": "promptString",
+			"description": "API key for authentication",
+			"password": true
+		}
+	]
+}

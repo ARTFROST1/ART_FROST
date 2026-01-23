@@ -1,0 +1,6 @@
+{
+  "title": "Example Project",
+  "description": "Placeholder project entry used to validate Content Collections during setup.",
+  "tags": ["Astro"],
+  "featured": false
+}

@@ -73,109 +73,99 @@
 **Модули:** `astro.config.mjs`, `package.json`, корневые файлы  
 **Время:** 2-3 часа
 
-- [ ] Создать проект через `npm create astro@latest artfrost-portfolio -- --template minimal`
-- [ ] Установить Node.js v20+ (проверить `.nvmrc`)
-- [ ] Настроить `package.json` с базовыми scripts (dev, build, preview, lint, format)
-- [ ] Инициализировать Git репозиторий
+- [x] Создать проект через `npm create astro@latest artfrost-portfolio -- --template minimal`
+- [x] Установить Node.js v20+ (проверить `.nvmrc`)
+- [x] Настроить `package.json` с базовыми scripts (dev, build, preview, lint, format)
+- [x] Инициализировать Git репозиторий
 
 ### 1.2 Dependencies Installation
 
 **Модули:** `package.json`  
 **Время:** 1-2 часа
 
-- [ ] Установить core integrations: `npx astro add react sitemap vercel`
-- [ ] Установить React 19: `npm install --save-exact react@^19.0.0 react-dom@^19.0.0`
-- [ ] Установить типы React: `npm install -D @types/react@^19.0.0 @types/react-dom@^19.0.0`
-- [ ] Установить Tailwind CSS v4: `npm install tailwindcss @tailwindcss/vite`
-- [ ] Установить ESLint 9.x с плагинами: `npm install -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-astro eslint-plugin-jsx-a11y`
-- [ ] Установить Prettier: `npm install -D prettier prettier-plugin-astro prettier-plugin-tailwindcss`
-- [ ] Установить Icons: `npm install astro-icon @iconify-json/lucide @iconify-json/simple-icons`
-- [ ] Установить RSS: `npm install @astrojs/rss`
-- [ ] Установить utils: `npm install clsx tailwind-merge`
+- [x] Установить core integrations: `npx astro add react sitemap vercel`
+- [x] Установить React 19: `npm install --save-exact react@^19.0.0 react-dom@^19.0.0`
+- [x] Установить типы React: `npm install -D @types/react@^19.0.0 @types/react-dom@^19.0.0`
+- [x] Установить Tailwind CSS v4: `npm install tailwindcss @tailwindcss/vite`
+- [x] Установить ESLint 9.x с плагинами: `npm install -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-astro eslint-plugin-jsx-a11y`
+- [x] Установить Prettier: `npm install -D prettier prettier-plugin-astro prettier-plugin-tailwindcss`
+- [x] Установить Icons: `npm install astro-icon @iconify-json/lucide @iconify-json/simple-icons`
+- [x] Установить RSS: `npm install @astrojs/rss`
+- [x] Установить utils: `npm install clsx tailwind-merge`
 
 ### 1.3 TypeScript Configuration
 
 **Модули:** `tsconfig.json`  
 **Время:** 30 минут
 
-- [ ] Расширить `astro/tsconfigs/strict`
-- [ ] Настроить path aliases: `@/*`, `@components/*`, `@layouts/*`, `@lib/*`, `@data/*`, `@types/*`
-- [ ] Настроить JSX для React: `jsx: "react-jsx"`, `jsxImportSource: "react"`
+- [x] Расширить `astro/tsconfigs/strict`
+- [x] Настроить path aliases: `@/*`, `@components/*`, `@layouts/*`, `@lib/*`, `@data/*`, `@types/*`
+- [x] Настроить JSX для React: `jsx: "react-jsx"`, `jsxImportSource: "react"`
 
 ### 1.4 Linting & Formatting Configuration
 
 **Модули:** `eslint.config.js`, `.prettierrc`  
 **Время:** 1 час
 
-- [ ] Создать `eslint.config.js` с flat config (ESLint 9.x)
-- [ ] Добавить правила для TypeScript, Astro, JSX-a11y
-- [ ] Создать `.prettierrc` с plugins для Astro и Tailwind
-- [ ] Добавить `.editorconfig` для консистентности
+- [x] Создать `eslint.config.js` с flat config (ESLint 9.x)
+- [x] Добавить правила для TypeScript, Astro, JSX-a11y
+- [x] Создать `.prettierrc` с plugins для Astro и Tailwind
+- [x] Добавить `.editorconfig` для консистентности
 
 ### 1.5 Astro Configuration
 
 **Модули:** `astro.config.mjs`  
 **Время:** 1 час
 
-- [ ] Настроить `site` URL (временно `https://artfrost.vercel.app`)
-- [ ] Настроить `output: 'hybrid'` для SSG + opt-in SSR
-- [ ] Подключить Vercel adapter с webAnalytics
-- [ ] Подключить интеграции: react, sitemap
-- [ ] Настроить Vite plugins для Tailwind CSS v4
-- [ ] Настроить prefetch стратегию
+- [x] Настроить `site` URL (временно `https://artfrost.vercel.app`)
+- [x] Настроить `output: 'static'` для SSG
+- [x] Подключить Vercel adapter с webAnalytics
+- [x] Подключить интеграции: react, sitemap
+- [x] Настроить Vite plugins для Tailwind CSS v4
+- [x] Настроить prefetch стратегию
 
 ### 1.6 Vercel Configuration
 
 **Модули:** `vercel.json`  
 **Время:** 30 минут
 
-- [ ] Настроить `framework: "astro"`
-- [ ] Настроить `regions: ["fra1"]` для Европы
-- [ ] Добавить security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy)
+- [x] Настроить `framework: "astro"`
+- [x] Настроить `regions: ["fra1"]` для Европы
+- [x] Добавить security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy)
 
 ### 1.7 Folder Structure Creation
 
 **Модули:** Вся структура `src/`  
 **Время:** 1 час
 
-- [ ] Создать структуру папок согласно ProjectStructure.md:
-  - `src/components/{common, layout, home, about, projects, links, seo, ui}/`
-  - `src/content/projects/`
-  - `src/data/`
-  - `src/layouts/`
-  - `src/lib/{utils, theme}/`
-  - `src/pages/`
-  - `src/styles/`
-  - `src/types/`
-- [ ] Создать `public/assets/{3d, images, icons}/`
-- [ ] Создать `public/fonts/`
+- [x] Создать структуру папок согласно ProjectStructure.md
 
 ### 1.8 Environment Setup
 
 **Модули:** `.env.example`, `.gitignore`  
 **Время:** 30 минут
 
-- [ ] Создать `.env.example` с шаблоном переменных
-- [ ] Настроить `.gitignore` (node_modules, dist, .env, .astro)
-- [ ] Создать `.nvmrc` с версией Node.js 20
+- [x] Создать `.env.example` с шаблоном переменных
+- [x] Настроить `.gitignore` (node_modules, dist, .env, .astro)
+- [x] Создать `.nvmrc` с версией Node.js 20
 
 ### 1.9 VS Code Configuration
 
 **Модули:** `.vscode/`  
 **Время:** 30 минут
 
-- [ ] Создать `.vscode/extensions.json` с рекомендуемыми расширениями
-- [ ] Создать `.vscode/settings.json` с настройками проекта
-- [ ] Настроить format on save, ESLint autofix
+- [x] Создать `.vscode/extensions.json` с рекомендуемыми расширениями
+- [x] Создать `.vscode/settings.json` с настройками проекта
+- [x] Настроить format on save, ESLint autofix
 
 ### 1.10 CI/CD Pipeline Setup
 
 **Модули:** `.github/workflows/ci.yml`  
 **Время:** 1 час
 
-- [ ] Создать GitHub workflow для CI (lint, typecheck, build)
-- [ ] Настроить триггер на push/PR в main
-- [ ] Создать `dependabot.yml` для автоматических обновлений
+- [x] Создать GitHub workflow для CI (lint, typecheck, build)
+- [x] Настроить триггер на push/PR в main
+- [x] Создать `dependabot.yml` для автоматических обновлений
 
 ### 1.11 Vercel Deployment
 

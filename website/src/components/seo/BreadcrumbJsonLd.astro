@@ -1,0 +1,61 @@
+---
+/**
+ * BreadcrumbJsonLd - Schema.org BreadcrumbList для навигационных цепочек
+ * Помогает поисковикам отображать breadcrumbs в результатах поиска
+ * 
+ * Использование:
+ * <BreadcrumbJsonLd
+ *   items={[
+ *     { name: 'Главная', url: '/' },
+ *     { name: 'Проекты', url: '/projects' },
+ *     { name: 'My Project', url: '/projects/my-project' },
+ *   ]}
+ * />
+ */
+
+import JsonLd from './JsonLd.astro';
+
+export interface BreadcrumbItem {
+  /**
+   * Название пункта
+   */
+  name: string;
+  /**
+   * URL пункта (относительный или абсолютный)
+   */
+  url: string;
+}
+
+export interface Props {
+  /**
+   * Массив элементов breadcrumb (в порядке иерархии)
+   */
+  items: BreadcrumbItem[];
+}
+
+const SITE_URL = Astro.site?.toString() || 'https://artfrost.vercel.app';
+
+const { items } = Astro.props;
+
+// Формируем абсолютные URL и структуру ListItem
+const itemListElement = items.map((item, index) => {
+  const absoluteUrl = item.url.startsWith('http')
+    ? item.url
+    : `${SITE_URL.replace(/\/$/, '')}${item.url.startsWith('/') ? item.url : `/${item.url}`}`;
+
+  return {
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.name,
+    item: absoluteUrl,
+  };
+});
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement,
+};
+---
+
+<JsonLd data={data} />

@@ -1,0 +1,134 @@
+---
+/**
+ * ResponsiveImage Component
+ * Optimized image with srcset, lazy loading, and aspect ratio
+ *
+ * @example
+ * <ResponsiveImage
+ *   src="/images/hero.jpg"
+ *   alt="Hero image"
+ *   width={1200}
+ *   height={630}
+ * />
+ *
+ * <ResponsiveImage
+ *   src="/images/project.png"
+ *   alt="Project screenshot"
+ *   loading="eager"
+ *   priority
+ * />
+ */
+
+import { cn } from '@lib/utils';
+
+interface Props {
+  /** Image source URL */
+  src: string;
+  /** Image alt text (required for accessibility) */
+  alt: string;
+  /** Image width in pixels */
+  width?: number;
+  /** Image height in pixels */
+  height?: number;
+  /** Loading strategy */
+  loading?: 'lazy' | 'eager';
+  /** High priority image (above the fold) */
+  priority?: boolean;
+  /** Object fit style */
+  fit?: 'cover' | 'contain' | 'fill' | 'none';
+  /** Aspect ratio */
+  aspectRatio?: 'auto' | 'square' | 'video' | '4/3' | '3/2';
+  /** Additional CSS classes for container */
+  class?: string;
+  /** Additional CSS classes for image */
+  imageClass?: string;
+  /** Show placeholder while loading */
+  placeholder?: boolean;
+  /** Sizes attribute for responsive images */
+  sizes?: string;
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  loading = 'lazy',
+  priority = false,
+  fit = 'cover',
+  aspectRatio = 'auto',
+  class: className,
+  imageClass,
+  placeholder = true,
+  sizes = '100vw',
+} = Astro.props;
+
+// Determine loading strategy
+const loadingAttr = priority ? 'eager' : loading;
+const fetchPriority = priority ? 'high' : undefined;
+const decoding = priority ? 'sync' : 'async';
+
+// Aspect ratio mapping
+const aspectRatioStyles = {
+  auto: '',
+  square: 'aspect-square',
+  video: 'aspect-video',
+  '4/3': 'aspect-[4/3]',
+  '3/2': 'aspect-[3/2]',
+};
+
+// Object fit mapping
+const fitStyles = {
+  cover: 'object-cover',
+  contain: 'object-contain',
+  fill: 'object-fill',
+  none: 'object-none',
+};
+
+// Container styles
+const containerStyles = cn(
+  'relative overflow-hidden',
+  aspectRatioStyles[aspectRatio],
+  placeholder && 'bg-[var(--color-bg-secondary)]',
+  className
+);
+
+// Image styles
+const imgStyles = cn(
+  'w-full h-full',
+  fitStyles[fit],
+  'transition-opacity duration-300',
+  imageClass
+);
+
+// Generate srcset for common breakpoints (if local image)
+const isLocalImage = src.startsWith('/');
+const srcset = isLocalImage
+  ? undefined // For now, use single src; can be extended with image optimization
+  : undefined;
+---
+
+<div class={containerStyles}>
+  {
+    placeholder && (
+      <div
+        class="absolute inset-0 bg-[var(--color-bg-secondary)] animate-pulse"
+        aria-hidden="true"
+      />
+    )
+  }
+
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loadingAttr}
+    decoding={decoding}
+    fetchpriority={fetchPriority}
+    sizes={sizes}
+    srcset={srcset}
+    class={imgStyles}
+    onload="this.parentElement?.querySelector('[aria-hidden]')?.remove()"
+  />
+</div>

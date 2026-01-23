@@ -1,0 +1,110 @@
+---
+/**
+ * PersonJsonLd - Schema.org Person для страницы About
+ * Помогает поисковикам понять информацию о персоне
+ * 
+ * Использование:
+ * <PersonJsonLd
+ *   name="Art Frost"
+ *   jobTitle="IT-специалист"
+ *   description="Vibe coder, разработчик..."
+ * />
+ */
+
+import JsonLd from './JsonLd.astro';
+
+export interface SocialProfile {
+  type: 'Telegram' | 'YouTube' | 'Instagram' | 'GitHub' | 'Twitter' | 'LinkedIn';
+  url: string;
+}
+
+export interface Props {
+  /**
+   * Полное имя
+   */
+  name?: string;
+  /**
+   * Альтернативное имя / никнейм
+   */
+  alternateName?: string;
+  /**
+   * Должность / специализация
+   */
+  jobTitle?: string;
+  /**
+   * Описание персоны
+   */
+  description?: string;
+  /**
+   * URL изображения (аватар)
+   */
+  image?: string;
+  /**
+   * Email для связи
+   */
+  email?: string;
+  /**
+   * URL персональной страницы
+   */
+  url?: string;
+  /**
+   * Социальные профили
+   */
+  sameAs?: string[];
+  /**
+   * Ключевые навыки
+   */
+  knowsAbout?: string[];
+}
+
+const SITE_URL = Astro.site?.toString() || 'https://artfrost.vercel.app';
+
+const {
+  name = 'Art Frost',
+  alternateName = 'artfrost',
+  jobTitle = 'IT-специалист',
+  description = 'Vibe coder, разработчик и создатель цифрового контента. Специализация: веб-разработка, автоматизация, AI интеграции.',
+  image,
+  email,
+  url = SITE_URL,
+  sameAs = [
+    'https://t.me/artfrost',
+    'https://youtube.com/@artfrost',
+    'https://instagram.com/artfrost',
+    'https://github.com/artfrost',
+  ],
+  knowsAbout = [
+    'Web Development',
+    'TypeScript',
+    'React',
+    'Astro',
+    'Node.js',
+    'AI Integration',
+    'Automation',
+  ],
+} = Astro.props;
+
+// Базовая структура Person
+const data: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name,
+  alternateName,
+  jobTitle,
+  description,
+  url: url.replace(/\/$/, ''),
+  sameAs,
+  knowsAbout,
+};
+
+// Добавляем опциональные поля
+if (image) {
+  data.image = image.startsWith('http') ? image : `${url.replace(/\/$/, '')}${image}`;
+}
+
+if (email) {
+  data.email = email.startsWith('mailto:') ? email : `mailto:${email}`;
+}
+---
+
+<JsonLd data={data} />

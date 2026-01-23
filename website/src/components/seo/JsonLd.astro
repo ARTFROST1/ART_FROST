@@ -1,0 +1,34 @@
+---
+/**
+ * JsonLd - универсальный wrapper для JSON-LD структурированных данных
+ * 
+ * Использование:
+ * <JsonLd data={{
+ *   "@context": "https://schema.org",
+ *   "@type": "Organization",
+ *   "name": "Art Frost"
+ * }} />
+ */
+
+export interface Props {
+  /**
+   * JSON-LD объект данных
+   * Должен содержать @context и @type
+   */
+  data: Record<string, unknown>;
+}
+
+const { data } = Astro.props;
+
+// Валидация обязательных полей
+if (!data['@context'] || !data['@type']) {
+  console.warn('JsonLd: Missing @context or @type in data');
+}
+
+// Сериализация с отступами для читаемости в dev, минифицировано в prod
+const jsonString = import.meta.env.DEV
+  ? JSON.stringify(data, null, 2)
+  : JSON.stringify(data);
+---
+
+<script is:inline type="application/ld+json" set:html={jsonString} />

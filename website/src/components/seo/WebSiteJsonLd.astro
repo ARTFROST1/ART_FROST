@@ -1,0 +1,74 @@
+---
+/**
+ * WebSiteJsonLd - Schema.org WebSite для главной страницы
+ * Помогает поисковикам понять структуру сайта и добавить sitelinks
+ * 
+ * Использование на главной:
+ * <WebSiteJsonLd />
+ */
+
+import JsonLd from './JsonLd.astro';
+
+export interface Props {
+  /**
+   * URL сайта (по умолчанию берётся из Astro.site)
+   */
+  url?: string;
+  /**
+   * Название сайта
+   */
+  name?: string;
+  /**
+   * Альтернативное название
+   */
+  alternateName?: string;
+  /**
+   * Описание сайта
+   */
+  description?: string;
+  /**
+   * URL для поиска по сайту (с параметром {search_term_string})
+   */
+  searchUrl?: string;
+}
+
+const SITE_URL = Astro.site?.toString() || 'https://artfrost.vercel.app';
+
+const {
+  url = SITE_URL,
+  name = 'Art Frost',
+  alternateName = 'artfrost',
+  description = 'Персональный сайт Art Frost — IT-специалист, vibe coder. Портфолио проектов, блог о технологиях и разработке.',
+  searchUrl,
+} = Astro.props;
+
+// Базовая структура WebSite
+const data: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name,
+  alternateName,
+  url: url.replace(/\/$/, ''), // Убираем trailing slash
+  description,
+  inLanguage: 'ru-RU',
+  publisher: {
+    '@type': 'Person',
+    name: 'Art Frost',
+    url: url.replace(/\/$/, ''),
+  },
+};
+
+// Добавляем SearchAction если указан searchUrl
+if (searchUrl) {
+  data.potentialAction = {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: searchUrl,
+    },
+    'query-input': 'required name=search_term_string',
+  };
+}
+---
+
+<JsonLd data={data} />

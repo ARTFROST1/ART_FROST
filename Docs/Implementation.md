@@ -193,8 +193,8 @@
 **Время:** 3-4 часа  
 **Зависимости:** 1.x (Foundation)
 
-- [ ] Настроить Tailwind CSS импорт в `global.css`
-- [ ] Определить CSS переменные для Dark Theme (default):
+- [x] Настроить Tailwind CSS импорт в `global.css`
+- [x] Определить CSS переменные для Dark Theme (default):
   - `--color-bg-primary: #050605`
   - `--color-bg-secondary: #0A0C0A`
   - `--color-bg-glass: rgba(255, 255, 255, 0.03)`
@@ -204,16 +204,17 @@
   - `--color-text-body: #A1A1AA`
   - `--color-text-muted: #52525B`
   - `--color-border-glass: rgba(255, 255, 255, 0.08)`
-- [ ] Определить CSS переменные для Light Theme:
+- [x] Определить CSS переменные для Light Theme:
   - `--color-bg-primary: #F7F9F8`
   - `--color-bg-secondary: #EEF2F0`
   - `--color-primary: #059669`
   - `--color-text-heading: #0B0F0C`
   - `--color-text-body: #1F2937`
-- [ ] Настроить font-family variables: `--font-display`, `--font-body`, `--font-mono`
-- [ ] Создать `fonts.css` с @font-face для Inter, Roboto, JetBrains Mono
-- [ ] Добавить utility классы: `.glass`, `.glow-primary`, `.text-glow`
-- [ ] Добавить `prefers-reduced-motion` media query
+- [x] Настроить font-family variables: `--font-display`, `--font-body`, `--font-mono`
+- [x] Создать `fonts.css` с @font-face для Inter, Roboto, JetBrains Mono
+- [x] Добавить utility классы: `.glass`, `.glow-primary`, `.text-glow`
+- [x] Добавить `prefers-reduced-motion` media query
+- [x] Важно: не использовать reset `* { padding: 0; margin: 0; }` в `global.css` — это ломает Tailwind spacing (`px-*`, `py-*`) и приводит к «прилипшим» кнопкам/меню.
 
 ### 2.2 Typography System
 
@@ -221,7 +222,7 @@
 **Время:** 1-2 часа  
 **Зависимости:** 2.1
 
-- [ ] Определить type scale классы согласно UI_UX.md:
+- [x] Определить type scale классы согласно UI_UX.md:
   - `.heading-hero`: text-4xl md:text-6xl font-bold tracking-tight
   - `.heading-section`: text-2xl md:text-4xl font-semibold
   - `.heading-card`: text-xl md:text-2xl font-semibold
@@ -236,11 +237,11 @@
 **Время:** 1-2 часа  
 **Зависимости:** 1.2
 
-- [ ] Создать `cn.ts` — className merger (clsx + tailwind-merge)
-- [ ] Создать `formatDate.ts` — форматирование дат для locale ru-RU
-- [ ] Создать `slugify.ts` — генерация URL-friendly slugs с транслитерацией
-- [ ] Создать `readingTime.ts` — расчёт времени чтения
-- [ ] Создать `seo.ts` — helpers для truncate, generate meta
+- [x] Создать `cn.ts` — className merger (clsx + tailwind-merge)
+- [x] Создать `formatDate.ts` — форматирование дат для locale ru-RU
+- [x] Создать `slugify.ts` — генерация URL-friendly slugs с транслитерацией
+- [x] Создать `readingTime.ts` — расчёт времени чтения
+- [x] Создать `seo.ts` — helpers для truncate, generate meta
 
 ### 2.4 Theme System
 
@@ -248,9 +249,9 @@
 **Время:** 2-3 часа  
 **Зависимости:** 2.1
 
-- [ ] Создать `theme-script.ts` — inline script для FOUC prevention
-- [ ] Создать `constants.ts` — theme constants ('light', 'dark')
-- [ ] Создать `ThemeToggle.tsx` (React component):
+- [x] Создать `theme-script.ts` — inline script для FOUC prevention
+- [x] Создать `constants.ts` — theme constants ('light', 'dark')
+- [x] Создать `ThemeToggle.tsx` (React component):
   - useState для текущей темы
   - useEffect для инициализации из localStorage/system preference
   - Функция toggle с сохранением в localStorage
@@ -263,7 +264,7 @@
 **Время:** 2-3 часа  
 **Зависимости:** 2.1, 2.2, 2.4
 
-- [ ] Создать `BaseLayout.astro`:
+- [x] Создать `BaseLayout.astro`:
   - HTML doctype с lang="ru"
   - `<head>`: charset, viewport, inline theme script
   - Slot для SEOHead component
@@ -277,18 +278,18 @@
 **Время:** 3-4 часа  
 **Зависимости:** 2.5
 
-- [ ] Создать `SEOHead.astro`:
+- [x] Создать `SEOHead.astro`:
   - Props: title, description, image, type, noindex
   - Canonical URL генерация
   - Meta tags: description, author
   - Open Graph tags: og:title, og:description, og:image, og:url, og:type
   - Twitter Card tags
   - Favicon links
-- [ ] Создать `JsonLd.astro` — wrapper для JSON-LD scripts
-- [ ] Создать `WebSiteJsonLd.astro` — WebSite schema для главной
-- [ ] Создать `PersonJsonLd.astro` — Person schema для About
-- [ ] Создать `CreativeWorkJsonLd.astro` — CreativeWork schema для Projects
-- [ ] Создать `BreadcrumbJsonLd.astro` — BreadcrumbList schema
+- [x] Создать `JsonLd.astro` — wrapper для JSON-LD scripts
+- [x] Создать `WebSiteJsonLd.astro` — WebSite schema для главной
+- [x] Создать `PersonJsonLd.astro` — Person schema для About
+- [x] Создать `CreativeWorkJsonLd.astro` — CreativeWork schema для Projects
+- [x] Создать `BreadcrumbJsonLd.astro` — BreadcrumbList schema
 
 ### 2.7 Common UI Components
 
@@ -296,27 +297,33 @@
 **Время:** 4-5 часов  
 **Зависимости:** 2.1, 2.2, 2.3
 
-- [ ] Создать `Button.astro`:
+- [x] Создать `Button.astro`:
   - Variants: primary, secondary, ghost, outline
   - Sizes: sm, md, lg
   - Props: href, disabled, fullWidth
   - Hover/focus states с glow effect
-- [ ] Создать `Card.astro`:
+  - Зафиксировать форму и отступы как в референсе:
+    - Radius: `rounded-xl` (не `rounded-full`)
+    - SM: `px-5 py-2.5`
+    - MD: `px-7 py-3`
+    - LG: `px-10 py-4`
+  - Использовать `Button.astro` для всех CTA (Hero + Header), не оставлять «ручные» `<a class=...>` с отдельными стилями.
+- [x] Создать `Card.astro`:
   - Glass background с backdrop-blur
   - Border glass style
   - Hover state с lift и glow
   - Slots для content
-- [ ] Создать `Tag.astro`:
+- [x] Создать `Tag.astro`:
   - Variants: default, primary, outline, active
   - Sizes: sm, md, lg
-- [ ] Создать `Icon.astro`:
+- [x] Создать `Icon.astro`:
   - Wrapper для astro-icon
   - Props: name, size, class
-- [ ] Создать `Container.astro`:
+- [x] Создать `Container.astro`:
   - Max-width container с responsive padding
-- [ ] Создать `Section.astro`:
+- [x] Создать `Section.astro`:
   - Section wrapper с vertical spacing
-- [ ] Создать `SkipLink.astro`:
+- [x] Создать `SkipLink.astro`:
   - Accessibility skip to main content link
 
 ### 2.8 UI Pattern Components
@@ -325,14 +332,14 @@
 **Время:** 2-3 часа  
 **Зависимости:** 2.7
 
-- [ ] Создать `GlowBackground.astro`:
+- [x] Создать `GlowBackground.astro`:
   - Radial gradient background для 3D assets
   - Props: color, intensity
-- [ ] Создать `GlassOverlay.astro`:
+- [x] Создать `GlassOverlay.astro`:
   - Glass gradient overlay component
-- [ ] Создать `AnimatedContainer.astro`:
+- [x] Создать `AnimatedContainer.astro`:
   - Container с hover animation
-- [ ] Создать `ResponsiveImage.astro`:
+- [x] Создать `ResponsiveImage.astro`:
   - Optimized image с srcset и lazy loading
 
 ### 2.9 Navigation Components
@@ -341,22 +348,25 @@
 **Время:** 4-5 часов  
 **Зависимости:** 2.7, 2.4
 
-- [ ] Создать `Header.astro`:
+- [x] Создать `Header.astro`:
   - Fixed position с glassmorphism background
   - Logo/Name слева
   - Desktop navigation links
   - Theme toggle и CTA справа
   - Mobile menu button (visible только на mobile)
-- [ ] Создать `Navigation.astro`:
+- [x] Создать `Navigation.astro`:
   - Desktop navigation links
   - Active state для текущей страницы
-- [ ] Создать `MobileMenu.tsx` (React):
+  - Обязательный `gap` между пунктами (не 0)
+  - Паддинги у каждого пункта навигации (как у tab-кнопки) и паддинг у контейнера (pill)
+  - Radius: tabs `rounded-xl`, container `rounded-2xl` (без `rounded-full`)
+- [x] Создать `MobileMenu.tsx` (React):
   - Hamburger button
   - Full-screen overlay с menu items
   - Close button
   - Анимация открытия/закрытия
   - Использовать `client:media="(max-width: 768px)"`
-- [ ] Создать `Footer.astro`:
+- [x] Создать `Footer.astro`:
   - Copyright text
   - Social icons
   - Navigation links (optional)
@@ -367,22 +377,22 @@
 **Время:** 2-3 часа  
 **Зависимости:** 1.7
 
-- [ ] Создать `site-config.ts`:
+- [x] Создать `site-config.ts`:
   - name, title, description, url
   - author info (name, email, telegram)
   - social links (telegram, youtube, instagram, github)
   - locale, themeColor
-- [ ] Создать `navigation.ts`:
+- [x] Создать `navigation.ts`:
   - Array навигационных ссылок (label, href, icon)
-- [ ] Создать `social-links.ts`:
+- [x] Создать `social-links.ts`:
   - Array социальных ссылок с icon, url, description
-- [ ] Создать `profile.ts`:
+- [x] Создать `profile.ts`:
   - Bio text, skills array, avatar URL
-- [ ] Создать `skills.ts`:
+- [x] Создать `skills.ts`:
   - Array навыков с categories
-- [ ] Создать `experience.ts`:
+- [x] Создать `experience.ts`:
   - Timeline entries (year, title, description)
-- [ ] Настроить `src/content/config.ts`:
+- [x] Настроить `src/content/config.ts`:
   - Projects collection schema с Zod validation
 
 ### 2.11 Page Layout
@@ -391,7 +401,7 @@
 **Время:** 1-2 часа  
 **Зависимости:** 2.5, 2.6, 2.9
 
-- [ ] Создать `PageLayout.astro`:
+- [x] Создать `PageLayout.astro`:
   - Extends BaseLayout
   - Header component
   - SkipLink component
@@ -405,7 +415,7 @@
 **Время:** 5-6 часов  
 **Зависимости:** 2.7, 2.8, 2.10
 
-- [ ] Создать `Hero.astro`:
+- [x] Создать `Hero.astro`:
   - Two-column layout (text + 3D asset)
   - Badge component ("AI Powered Dev")
   - Heading с gradient text
@@ -413,12 +423,12 @@
   - CTA buttons (Get Started, Explore Now)
   - 3D star asset с GlowBackground
   - Responsive: стек на mobile
-- [ ] Создать `FeaturedProjects.astro`:
+- [x] Создать `FeaturedProjects.astro`:
   - Section title "Latest Work"
   - Grid 4 колонки (responsive)
   - ProjectCard для каждого featured проекта
   - "View All Projects" link
-- [ ] Создать `SocialLinks.astro`:
+- [x] Создать `SocialLinks.astro`:
   - Grid социальных иконок
   - Icon buttons с hover glow effect
   - External links с noopener noreferrer
@@ -431,7 +441,7 @@
 **Время:** 2-3 часа  
 **Зависимости:** 2.11, 2.12
 
-- [ ] Создать `index.astro`:
+- [x] Создать `index.astro`:
   - PageLayout с SEO props
   - WebSiteJsonLd schema
   - Hero section

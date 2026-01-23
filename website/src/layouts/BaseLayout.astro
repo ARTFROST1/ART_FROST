@@ -1,0 +1,87 @@
+---
+/**
+ * BaseLayout - основной layout для всех страниц
+ * Включает: HTML doctype, head с meta, theme script, global CSS, body
+ */
+
+import { themeScript } from '@lib/theme/theme-script';
+import SkipLink from '@components/common/SkipLink.astro';
+import '@styles/fonts.css';
+import '@styles/global.css';
+
+interface Props {
+  /**
+   * Дополнительные классы для body
+   */
+  class?: string;
+}
+
+const { class: bodyClass } = Astro.props;
+
+// Canonical URL для текущей страницы
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="ru" class="scroll-smooth">
+  <head>
+    <!-- Character encoding & viewport -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Theme initialization script (FOUC prevention) -->
+    <!-- Must be inline and before any CSS -->
+    <script is:inline set:html={themeScript} />
+
+    <!-- Preload critical fonts -->
+    <link
+      rel="preload"
+      href="/fonts/inter-var-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-regular-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+
+    <!-- Generator meta -->
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Canonical URL (can be overridden by SEOHead) -->
+    <link rel="canonical" href={canonicalUrl.href} />
+
+    <!-- Theme color for browsers -->
+    <meta name="theme-color" content="#050605" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F7F9F8" media="(prefers-color-scheme: light)" />
+
+    <!-- Slot for SEOHead component -->
+    <slot name="head" />
+  </head>
+
+  <body
+    class:list={[
+      'min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-body)]',
+      'antialiased transition-colors duration-300',
+      bodyClass,
+    ]}
+  >
+    <!-- Skip to main content (accessibility) -->
+    <SkipLink target="main-content" />
+
+    <!-- Main content slot -->
+    <slot />
+
+    <!-- Vercel Analytics (loaded by adapter automatically if enabled) -->
+    <!-- Script is injected by @astrojs/vercel adapter when webAnalytics: { enabled: true } -->
+  </body>
+</html>

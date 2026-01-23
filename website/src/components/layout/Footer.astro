@@ -1,0 +1,133 @@
+---
+/**
+ * Footer Component
+ * Site footer with copyright, social links, and optional navigation
+ *
+ * @example
+ * <Footer />
+ * <Footer showNavigation />
+ */
+
+import { cn } from '@lib/utils';
+import Container from '@components/common/Container.astro';
+import Icon from '@components/common/Icon.astro';
+
+interface Props {
+  /** Show navigation links */
+  showNavigation?: boolean;
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { showNavigation = false, class: className } = Astro.props;
+
+// Current year for copyright
+const currentYear = new Date().getFullYear();
+
+// Social links
+const socialLinks = [
+  { label: 'Telegram', href: 'https://t.me/artfrost', icon: 'telegram' },
+  { label: 'YouTube', href: 'https://youtube.com/@artfrost', icon: 'youtube' },
+  { label: 'Instagram', href: 'https://instagram.com/artfrost', icon: 'instagram' },
+  { label: 'GitHub', href: 'https://github.com/artfrost', icon: 'github' },
+];
+
+// Navigation links (optional)
+const navLinks = [
+  { label: 'Главная', href: '/' },
+  { label: 'Проекты', href: '/projects' },
+  { label: 'Обо мне', href: '/about' },
+  { label: 'Ссылки', href: '/links' },
+];
+
+// Footer styles
+const footerStyles = cn(
+  'border-t border-[var(--color-border-glass-strong)]',
+  'bg-[var(--color-bg-secondary)]',
+  'py-8 md:py-12',
+  className
+);
+
+const socialLinkStyles = cn(
+  'flex items-center justify-center',
+  'w-10 h-10 rounded-lg',
+  'bg-white/5 border border-[var(--color-border-glass-strong)]',
+  'text-[var(--color-text-muted)]',
+  'transition-all duration-200',
+  'hover:bg-white/10 hover:text-[var(--color-primary)]',
+  'hover:border-[var(--color-primary)]/50',
+  'focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]'
+);
+
+const navLinkStyles = cn(
+  'text-sm text-[var(--color-text-muted)]',
+  'transition-colors duration-200',
+  'hover:text-[var(--color-primary)]'
+);
+---
+
+<footer class={footerStyles} role="contentinfo">
+  <Container>
+    <div class="flex flex-col items-center gap-6">
+      {/* Navigation Links (optional) */}
+      {
+        showNavigation && (
+          <nav
+            class="flex flex-wrap justify-center gap-4 md:gap-6"
+            aria-label="Дополнительная навигация"
+          >
+            {navLinks.map((link) => (
+              <a href={link.href} class={navLinkStyles}>
+                {link.label}
+              </a>
+            ))}
+          </nav>
+        )
+      }
+
+      {/* Social Links */}
+      <div class="flex items-center gap-3">
+        {
+          socialLinks.map((link) => (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class={socialLinkStyles}
+              aria-label={link.label}
+            >
+              <Icon name={link.icon} size="sm" />
+            </a>
+          ))
+        }
+      </div>
+
+      {/* Copyright */}
+      <p class="text-sm text-[var(--color-text-muted)] text-center">
+        © {currentYear}{' '}
+        <a
+          href="/"
+          class="hover:text-[var(--color-primary)] transition-colors duration-200"
+        >
+          Art Frost
+        </a>
+        . Все права защищены.
+      </p>
+
+      {/* Built with badge (optional) */}
+      <p class="text-xs text-[var(--color-text-muted)]/60 flex items-center gap-1">
+        Сделано с
+        <span class="text-red-500">♥</span>
+        на
+        <a
+          href="https://astro.build"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-[var(--color-primary)] hover:underline"
+        >
+          Astro
+        </a>
+      </p>
+    </div>
+  </Container>
+</footer>

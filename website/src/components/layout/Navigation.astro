@@ -1,0 +1,88 @@
+---
+/**
+ * Navigation Component
+ * Desktop navigation links with active state
+ *
+ * @example
+ * <Navigation currentPath={Astro.url.pathname} />
+ */
+
+import { cn } from '@lib/utils';
+
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  /** Current page path for active state */
+  currentPath: string;
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { currentPath, class: className } = Astro.props;
+
+// Navigation items
+const navItems: NavItem[] = [
+  { label: 'Главная', href: '/' },
+  { label: 'Проекты', href: '/projects' },
+  { label: 'Обо мне', href: '/about' },
+  { label: 'Ссылки', href: '/links' },
+];
+
+// Check if link is active
+const isActive = (href: string): boolean => {
+  if (href === '/') {
+    return currentPath === '/';
+  }
+  return currentPath.startsWith(href);
+};
+
+// Link styles - стеклянные табы с нормальными паддингами
+const linkBaseStyles = cn(
+  'inline-flex items-center justify-center',
+  'px-5 py-3 text-sm font-medium leading-none',
+  'rounded-xl',
+  'transition-[background-color,color,border-color,box-shadow,transform] duration-200',
+  'text-gray-300',
+  'focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/35'
+);
+
+const linkActiveStyles = cn(
+  'text-white',
+  'bg-white/10',
+  'shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]'
+);
+
+const linkInactiveStyles = cn(
+  'hover:text-white hover:bg-white/6'
+);
+
+// Container styles - pill container как в референсе, но без rounded-full
+const navStyles = cn(
+  'flex items-center gap-2',
+  'rounded-2xl border border-white/10',
+  'bg-[var(--color-bg-glass-strong)] backdrop-blur-xl',
+  'p-2',
+  'shadow-[0_12px_30px_-18px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.06)]',
+  className
+);
+---
+
+<nav class={navStyles} aria-label="Основная навигация">
+  {
+    navItems.map((item) => (
+      <a
+        href={item.href}
+        class={cn(
+          linkBaseStyles,
+          isActive(item.href) ? linkActiveStyles : linkInactiveStyles
+        )}
+        aria-current={isActive(item.href) ? 'page' : undefined}
+      >
+        {item.label}
+      </a>
+    ))
+  }
+</nav>

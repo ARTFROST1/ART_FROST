@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd /Users/artfrost/Projects/ART\\\\ FROST/website && npm run typecheck$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

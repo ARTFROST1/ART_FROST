@@ -1,17 +1,60 @@
 ---
-
+/**
+ * Главная страница - Art Frost Portfolio
+ * Landing page с Hero, Featured Projects и Social Links секциями
+ */
+import PageLayout from '@layouts/PageLayout.astro';
+import WebSiteJsonLd from '@components/seo/WebSiteJsonLd.astro';
+import Hero from '@components/home/Hero.astro';
+import FeaturedProjects from '@components/home/FeaturedProjects.astro';
+import SocialLinks from '@components/home/SocialLinks.astro';
+import { siteConfig } from '@data/site-config';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" type="image/png" href="/favicon.png" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<PageLayout
+  title={siteConfig.title}
+  description={siteConfig.description}
+>
+  <!-- JSON-LD Schema -->
+  <WebSiteJsonLd slot="head" />
+
+  <!-- Hero Section -->
+  <Hero />
+
+  <!-- Featured Projects Section -->
+  <FeaturedProjects />
+
+  <!-- Social Links Section -->
+  <SocialLinks />
+</PageLayout>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -100px 0px',
+    threshold: 0.1,
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-visible');
+        // Optional: stop observing after animation
+        // observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  // Observe all elements with .animate-on-scroll class
+  document.addEventListener('DOMContentLoaded', () => {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach((el) => observer.observe(el));
+  });
+
+  // Also run on astro page transitions
+  document.addEventListener('astro:page-load', () => {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach((el) => observer.observe(el));
+  });
+</script>

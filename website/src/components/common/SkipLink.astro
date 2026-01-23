@@ -1,0 +1,49 @@
+---
+/**
+ * SkipLink Component
+ * Accessibility skip to main content link
+ * Hidden by default, visible on focus for keyboard navigation
+ *
+ * @example
+ * <!-- In BaseLayout, before any content -->
+ * <SkipLink />
+ *
+ * <!-- Main content should have id="main-content" -->
+ * <main id="main-content">...</main>
+ */
+
+import { cn } from '@lib/utils';
+
+interface Props {
+  /** Target element ID to skip to */
+  target?: string;
+  /** Link text */
+  text?: string;
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const {
+  target = 'main-content',
+  text = 'Перейти к содержимому',
+  class: className,
+} = Astro.props;
+
+const styles = cn(
+  // Hidden by default using sr-only
+  'sr-only',
+  // Visible on focus
+  'focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100]',
+  // Styling
+  'focus:rounded-lg focus:bg-[var(--color-primary)] focus:px-4 focus:py-2',
+  'focus:text-white focus:font-medium focus:text-sm',
+  'focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50',
+  // Subtle transition
+  'transition-colors duration-200',
+  className
+);
+---
+
+<a href={`#${target}`} class={styles}>
+  {text}
+</a>

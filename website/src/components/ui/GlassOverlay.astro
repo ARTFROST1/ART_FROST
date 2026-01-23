@@ -1,0 +1,93 @@
+---
+/**
+ * GlassOverlay Component
+ * Glass gradient overlay for visual depth
+ *
+ * @example
+ * <GlassOverlay>
+ *   <h2>Heading with glass overlay</h2>
+ * </GlassOverlay>
+ *
+ * <GlassOverlay position="bottom" gradient="fade">
+ *   Content here
+ * </GlassOverlay>
+ */
+
+import { cn } from '@lib/utils';
+
+interface Props {
+  /** Overlay position */
+  position?: 'full' | 'top' | 'bottom' | 'left' | 'right';
+  /** Gradient type */
+  gradient?: 'glass' | 'fade' | 'vignette';
+  /** Additional CSS classes */
+  class?: string;
+  /** Apply blur effect */
+  blur?: boolean;
+  /** Blur intensity */
+  blurIntensity?: 'sm' | 'md' | 'lg';
+}
+
+const {
+  position = 'full',
+  gradient = 'glass',
+  class: className,
+  blur = false,
+  blurIntensity = 'md',
+} = Astro.props;
+
+// Position styles for the overlay
+const positionStyles = {
+  full: 'inset-0',
+  top: 'inset-x-0 top-0 h-1/3',
+  bottom: 'inset-x-0 bottom-0 h-1/3',
+  left: 'inset-y-0 left-0 w-1/3',
+  right: 'inset-y-0 right-0 w-1/3',
+};
+
+// Gradient styles
+const gradientMap = {
+  glass: 'linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%)',
+  fade: position === 'bottom'
+    ? 'linear-gradient(to top, var(--color-bg-primary) 0%, transparent 100%)'
+    : position === 'top'
+    ? 'linear-gradient(to bottom, var(--color-bg-primary) 0%, transparent 100%)'
+    : position === 'left'
+    ? 'linear-gradient(to right, var(--color-bg-primary) 0%, transparent 100%)'
+    : position === 'right'
+    ? 'linear-gradient(to left, var(--color-bg-primary) 0%, transparent 100%)'
+    : 'linear-gradient(180deg, var(--color-bg-primary) 0%, transparent 100%)',
+  vignette: 'radial-gradient(circle, transparent 40%, var(--color-bg-primary) 100%)',
+};
+
+// Blur intensity mapping
+const blurMap = {
+  sm: 'backdrop-blur-sm',
+  md: 'backdrop-blur-md',
+  lg: 'backdrop-blur-lg',
+};
+
+// Combine styles for overlay
+const overlayStyles = cn(
+  'absolute pointer-events-none',
+  positionStyles[position],
+  blur && blurMap[blurIntensity]
+);
+
+// Container styles
+const containerStyles = cn('relative', className);
+---
+
+<div class={containerStyles}>
+  <!-- Content layer -->
+  <div class="relative z-10">
+    <slot />
+  </div>
+
+  <!-- Overlay layer -->
+  <div
+    class={overlayStyles}
+    style={`background: ${gradientMap[gradient]};`}
+    aria-hidden="true"
+  />
+</div>

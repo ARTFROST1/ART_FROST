@@ -1,0 +1,82 @@
+---
+/**
+ * GlowBackground Component
+ * Radial gradient background effect for 3D assets
+ *
+ * @example
+ * <GlowBackground>
+ *   <img src="/assets/3d/hero.png" alt="3D Asset" />
+ * </GlowBackground>
+ *
+ * <GlowBackground color="secondary" intensity="high">
+ *   Content here
+ * </GlowBackground>
+ */
+
+import { cn } from '@lib/utils';
+
+interface Props {
+  /** Glow color variant */
+  color?: 'primary' | 'secondary' | 'custom';
+  /** Glow intensity */
+  intensity?: 'low' | 'medium' | 'high';
+  /** Custom glow color (when color="custom") */
+  customColor?: string;
+  /** Additional CSS classes */
+  class?: string;
+  /** Position of the glow */
+  position?: 'center' | 'top' | 'bottom' | 'left' | 'right';
+}
+
+const {
+  color = 'primary',
+  intensity = 'medium',
+  customColor,
+  class: className,
+  position = 'center',
+} = Astro.props;
+
+// Color mapping
+const colorMap = {
+  primary: 'var(--color-primary-glow)',
+  secondary: 'var(--color-gradient-end)',
+  custom: customColor || 'var(--color-primary-glow)',
+};
+
+// Intensity mapping (opacity percentage)
+const intensityMap = {
+  low: '0.15',
+  medium: '0.3',
+  high: '0.5',
+};
+
+// Position mapping
+const positionMap = {
+  center: 'center center',
+  top: 'center top',
+  bottom: 'center bottom',
+  left: 'left center',
+  right: 'right center',
+};
+
+const glowColor = colorMap[color];
+const glowIntensity = intensityMap[intensity];
+const glowPosition = positionMap[position];
+
+// Combine styles
+const containerStyles = cn('relative', className);
+---
+
+<div class={containerStyles}>
+  <!-- Glow background layer -->
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style={`background: radial-gradient(circle at ${glowPosition}, ${glowColor} 0%, transparent 70%); opacity: ${glowIntensity};`}
+    aria-hidden="true"
+  />
+
+  <!-- Content layer -->
+  <div class="relative z-10">
+    <slot />
+  </div>
+</div>

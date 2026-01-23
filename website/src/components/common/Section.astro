@@ -1,0 +1,77 @@
+---
+/**
+ * Section Component
+ * Section wrapper with consistent vertical spacing
+ *
+ * @example
+ * <Section>
+ *   <h2>Section Title</h2>
+ *   <p>Section content</p>
+ * </Section>
+ *
+ * <Section id="about" spacing="lg" background="secondary">
+ *   Content here
+ * </Section>
+ */
+
+import { cn } from '@lib/utils';
+import Container from './Container.astro';
+
+interface Props {
+  /** Section ID for anchor links */
+  id?: string;
+  /** Vertical spacing size */
+  spacing?: 'sm' | 'md' | 'lg' | 'xl';
+  /** Container max-width */
+  containerSize?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  /** Background style */
+  background?: 'default' | 'secondary' | 'none';
+  /** Additional CSS classes */
+  class?: string;
+  /** Skip container wrapper */
+  fullWidth?: boolean;
+}
+
+const {
+  id,
+  spacing = 'lg',
+  containerSize = 'lg',
+  background = 'default',
+  class: className,
+  fullWidth = false,
+} = Astro.props;
+
+// Spacing mapping (py = padding vertical)
+const spacingStyles = {
+  sm: 'py-8 md:py-12',
+  md: 'py-12 md:py-16',
+  lg: 'py-16 md:py-24',
+  xl: 'py-24 md:py-32',
+};
+
+// Background mapping
+const backgroundStyles = {
+  default: 'bg-[var(--color-bg-primary)]',
+  secondary: 'bg-[var(--color-bg-secondary)]',
+  none: '',
+};
+
+// Combine styles
+const sectionStyles = cn(
+  spacingStyles[spacing],
+  backgroundStyles[background],
+  className
+);
+---
+
+<section id={id} class={sectionStyles}>
+  {
+    fullWidth ? (
+      <slot />
+    ) : (
+      <Container size={containerSize}>
+        <slot />
+      </Container>
+    )
+  }
+</section>

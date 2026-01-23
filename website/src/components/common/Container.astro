@@ -1,0 +1,50 @@
+---
+/**
+ * Container Component
+ * Max-width container with responsive horizontal padding
+ *
+ * @example
+ * <Container>Content goes here</Container>
+ * <Container size="sm">Narrow content</Container>
+ */
+
+import { cn } from '@lib/utils';
+
+interface Props {
+  /** Container max-width size */
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  /** Additional CSS classes */
+  class?: string;
+  /** HTML element to render */
+  as?: 'div' | 'section' | 'article' | 'main' | 'header' | 'footer';
+}
+
+const {
+  size = 'lg',
+  class: className,
+  as: Element = 'div',
+} = Astro.props;
+
+type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
+
+// Max-width mapping
+const maxWidthStyles: Record<ContainerSize, string> = {
+  sm: 'max-w-2xl',      // 672px
+  md: 'max-w-4xl',      // 896px
+  lg: 'max-w-6xl',      // 1152px
+  xl: 'max-w-7xl',      // 1280px
+  full: 'max-w-full',
+};
+
+// Base styles with responsive padding
+const baseStyles = cn(
+  'w-full mx-auto',
+  'px-6 sm:px-10 lg:px-16',
+  maxWidthStyles[size as ContainerSize],
+  className
+);
+---
+
+<Element class={baseStyles}>
+  <slot />
+</Element>

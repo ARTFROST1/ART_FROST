@@ -1,0 +1,89 @@
+---
+/**
+ * Tag Component
+ * Small label/tag for categories, technologies, etc.
+ *
+ * @example
+ * <Tag>React</Tag>
+ * <Tag variant="primary">Featured</Tag>
+ * <Tag variant="outline" size="sm">TypeScript</Tag>
+ */
+
+import { cn } from '@lib/utils';
+
+interface Props {
+  /** Tag variant */
+  variant?: 'default' | 'primary' | 'outline' | 'active';
+  /** Tag size */
+  size?: 'sm' | 'md' | 'lg';
+  /** Additional CSS classes */
+  class?: string;
+  /** Make tag clickable */
+  href?: string;
+}
+
+const {
+  variant = 'default',
+  size = 'md',
+  class: className,
+  href,
+} = Astro.props;
+
+// Base styles
+const baseStyles = cn(
+  'inline-flex items-center justify-center',
+  'font-medium rounded-lg',
+  'transition-colors duration-200'
+);
+
+// Variant styles
+const variantStyles = {
+  default: cn(
+    'bg-white/5 text-[var(--color-text-body)]',
+    'border border-[var(--color-border-glass)]',
+    href && 'hover:bg-white/10 hover:text-[var(--color-text-heading)]'
+  ),
+  primary: cn(
+    'bg-[var(--color-primary)]/10 text-[var(--color-primary)]',
+    'border border-[var(--color-primary)]/40',
+    href && 'hover:bg-[var(--color-primary)]/20 hover:border-[var(--color-primary)]/60'
+  ),
+  outline: cn(
+    'bg-transparent text-[var(--color-text-muted)]',
+    'border border-[var(--color-border-glass)]',
+    href && 'hover:border-[var(--color-primary)]/50 hover:text-[var(--color-primary)]'
+  ),
+  active: cn(
+    'bg-[var(--color-primary)] text-white',
+    'border border-[var(--color-primary)]',
+    href && 'hover:bg-[var(--color-gradient-end)]'
+  ),
+};
+
+// Size styles
+const sizeStyles = {
+  sm: 'px-2 py-0.5 text-xs',
+  md: 'px-3 py-1 text-sm',
+  lg: 'px-4 py-1.5 text-base',
+};
+
+// Combine styles
+const combinedStyles = cn(
+  baseStyles,
+  variantStyles[variant],
+  sizeStyles[size],
+  className
+);
+---
+
+{
+  href ? (
+    <a href={href} class={combinedStyles}>
+      <slot />
+    </a>
+  ) : (
+    <span class={combinedStyles}>
+      <slot />
+    </span>
+  )
+}

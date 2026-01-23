@@ -1,0 +1,156 @@
+---
+/**
+ * CreativeWorkJsonLd - Schema.org CreativeWork для страниц проектов
+ * Помогает поисковикам понять информацию о работах/проектах
+ * 
+ * Использование:
+ * <CreativeWorkJsonLd
+ *   name="My Project"
+ *   description="Description of the project"
+ *   url="/projects/my-project"
+ *   image="/images/projects/my-project.png"
+ *   technologies={['React', 'TypeScript']}
+ * />
+ */
+
+import JsonLd from './JsonLd.astro';
+
+export interface Props {
+  /**
+   * Название проекта
+   */
+  name: string;
+  /**
+   * Описание проекта
+   */
+  description: string;
+  /**
+   * URL страницы проекта
+   */
+  url: string;
+  /**
+   * URL изображения проекта
+   */
+  image?: string;
+  /**
+   * Дата создания (ISO 8601)
+   */
+  dateCreated?: string;
+  /**
+   * Дата публикации (ISO 8601)
+   */
+  datePublished?: string;
+  /**
+   * Автор проекта
+   */
+  author?: string;
+  /**
+   * Технологии / ключевые слова
+   */
+  technologies?: string[];
+  /**
+   * URL репозитория (GitHub)
+   */
+  codeRepository?: string;
+  /**
+   * URL демо
+   */
+  demoUrl?: string;
+  /**
+   * Тип проекта: 'SoftwareApplication' | 'WebSite' | 'CreativeWork'
+   * @default 'CreativeWork'
+   */
+  workType?: 'SoftwareApplication' | 'WebSite' | 'CreativeWork';
+}
+
+const SITE_URL = Astro.site?.toString() || 'https://artfrost.vercel.app';
+const AUTHOR_NAME = 'Art Frost';
+
+const {
+  name,
+  description,
+  url,
+  image,
+  dateCreated,
+  datePublished,
+  author = AUTHOR_NAME,
+  technologies = [],
+  codeRepository,
+  demoUrl,
+  workType = 'CreativeWork',
+} = Astro.props;
+
+const normalizePath = (path: string) => (path.startsWith('/') ? path : `/${path}`);
+
+// Формируем абсолютные URL
+const absoluteUrl = url.startsWith('http')
+  ? url
+  : `${SITE_URL.replace(/\/$/, '')}${normalizePath(url)}`;
+const absoluteImage = image
+  ? image.startsWith('http')
+    ? image
+    : `${SITE_URL.replace(/\/$/, '')}${normalizePath(image)}`
+  : undefined;
+
+// Базовая структура CreativeWork
+const data: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': workType,
+  name,
+  description,
+  url: absoluteUrl,
+  author: {
+    '@type': 'Person',
+    name: author,
+    url: SITE_URL.replace(/\/$/, ''),
+  },
+  creator: {
+    '@type': 'Person',
+    name: author,
+  },
+  inLanguage: 'ru-RU',
+};
+
+// Добавляем изображение
+if (absoluteImage) {
+  data.image = absoluteImage;
+  data.thumbnailUrl = absoluteImage;
+}
+
+// Добавляем даты
+if (dateCreated) {
+  data.dateCreated = dateCreated;
+}
+if (datePublished) {
+  data.datePublished = datePublished;
+}
+
+// Добавляем ключевые слова (технологии)
+if (technologies.length > 0) {
+  data.keywords = technologies.join(', ');
+}
+
+// Для SoftwareApplication добавляем специфичные поля
+if (workType === 'SoftwareApplication') {
+  data.applicationCategory = 'WebApplication';
+  
+  if (codeRepository) {
+    data.codeRepository = codeRepository;
+  }
+  
+  if (demoUrl) {
+    data.installUrl = demoUrl;
+  }
+  
+  if (technologies.length > 0) {
+    data.programmingLanguage = technologies;
+  }
+}
+
+// Для WebSite добавляем URL
+if (workType === 'WebSite' && demoUrl) {
+  data.mainEntityOfPage = demoUrl;
+}
+---
+
+<JsonLd data={data} />

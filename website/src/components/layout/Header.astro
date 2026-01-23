@@ -1,0 +1,126 @@
+---
+/**
+ * Header Component
+ * Fixed header with glassmorphism background
+ * Includes logo, navigation, theme toggle, and mobile menu button
+ *
+ * @example
+ * <Header currentPath={Astro.url.pathname} />
+ */
+
+import { cn } from '@lib/utils';
+import Navigation from './Navigation.astro';
+import { ThemeToggle } from './ThemeToggle';
+import Button from '@components/common/Button.astro';
+import Icon from '@components/common/Icon.astro';
+
+interface Props {
+  /** Current page path for active state */
+  currentPath: string;
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { currentPath, class: className } = Astro.props;
+
+// Header styles
+const headerStyles = cn(
+  'fixed top-0 left-0 right-0 z-50',
+  'bg-transparent',
+  'pt-4',
+  'transition-colors duration-300',
+  className
+);
+
+const containerStyles = cn(
+  'max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12',
+  'flex items-center justify-between',
+  'min-h-[72px]' // Min height instead of fixed
+);
+
+// Removed barStyles entirely to support separate elements layout
+---
+
+<header class={headerStyles} role="banner">
+  <div class={containerStyles}>
+    <!-- Logo / Brand -->
+    <a
+      href="/"
+      class="flex items-center gap-2 text-[var(--color-text-heading)] font-display font-bold text-xl hover:text-[var(--color-primary)] transition-colors duration-200 z-10"
+      aria-label="Art Frost - Главная"
+    >
+      <span class="text-[var(--color-primary)]">&lt;</span>
+      <span>Art Frost</span>
+      <span class="text-[var(--color-primary)]">/&gt;</span>
+    </a>
+
+    <!-- Desktop Navigation - Центрировано абсолютно -->
+    <div class="absolute left-1/2 top-6 -translate-x-1/2 hidden md:block">
+      <Navigation currentPath={currentPath} />
+    </div>
+
+    <!-- Right side: Theme Toggle + CTA Buttons + Mobile Menu -->
+    <div class="flex items-center gap-4 z-10">
+      <!-- Theme Toggle -->
+      <ThemeToggle client:load />
+
+      <!-- CTA Buttons (Desktop only) -->
+      <div class="hidden md:flex items-center gap-3">
+        <Button href="/links" variant="ghost" size="md">Sign In</Button>
+        <Button href="https://t.me/artfrost" external variant="primary" size="md">
+          Get Started
+        </Button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <!-- ... existing code ... -->
+      <button
+        id="mobile-menu-button"
+        type="button"
+        class={cn(
+          'md:hidden relative inline-flex items-center justify-center',
+          'h-10 w-10 rounded-xl',
+          'border border-[var(--color-border-glass-strong)]',
+          'bg-[var(--color-bg-glass)] backdrop-blur-md',
+          'text-[var(--color-text-heading)]',
+          'transition-all duration-200',
+          'hover:border-white/20 hover:bg-white/10',
+          'focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]'
+        )}
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Открыть меню"
+        >
+          <Icon name="menu" size="md" class="menu-icon" />
+          <Icon name="x" size="md" class="close-icon hidden" />
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Spacer to prevent content from hiding under fixed header -->
+<div class="h-16" aria-hidden="true"></div>
+
+<script>
+  // Simple mobile menu toggle without React
+  // Full mobile menu is handled by MobileMenu.tsx component
+  const button = document.getElementById('mobile-menu-button');
+  const menuIcon = button?.querySelector('.menu-icon');
+  const closeIcon = button?.querySelector('.close-icon');
+
+  button?.addEventListener('click', () => {
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', String(!isExpanded));
+
+    menuIcon?.classList.toggle('hidden');
+    closeIcon?.classList.toggle('hidden');
+
+    // Dispatch custom event for MobileMenu React component
+    window.dispatchEvent(
+      new CustomEvent('toggle-mobile-menu', {
+        detail: { isOpen: !isExpanded },
+      })
+    );
+  });
+</script>

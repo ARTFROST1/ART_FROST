@@ -129,13 +129,16 @@
 
 | Component | Padding | Gap |
 |-----------|---------|-----|
-| **Button (SM)** | `py-2 px-4` (8px 16px) | — |
-| **Button (MD)** | `py-3 px-6` (12px 24px) | — |
-| **Button (LG)** | `py-4 px-8` (16px 32px) | — |
+| **Button (SM)** | `py-2.5 px-5` (10px 20px) | — |
+| **Button (MD)** | `py-3 px-7` (12px 28px) | — |
+| **Button (LG)** | `py-4 px-10` (16px 40px) | — |
 | **Card** | `p-6` (24px) | — |
 | **Card Grid** | — | `gap-6` (24px) |
 | **Section** | `py-16 md:py-24` | `gap-8 md:gap-12` |
-| **Navigation** | `py-4 px-6` | `gap-6 md:gap-8` |
+| **Navigation (Header pill)** | Container `p-2` + item `py-3 px-5` | `gap-2` |
+
+> Важно: не добавлять глобальный reset `* { padding: 0; margin: 0; }`.
+> В Tailwind CSS v4 такие reset-правила могут «обнулить» визуальные отступы (`px-*`, `py-*`) и сломать кнопки/навигацию.
 
 ---
 
@@ -203,8 +206,8 @@
 
 | Token | Value | Tailwind | Usage |
 |-------|-------|----------|-------|
-| `radius-sm` | 8px | `rounded-lg` | Кнопки, теги |
-| `radius-md` | 12px | `rounded-xl` | Малые карточки |
+| `radius-sm` | 8px | `rounded-lg` | Теги, мелкие элементы |
+| `radius-md` | 12px | `rounded-xl` | Кнопки, табы навигации |
 | `radius-lg` | 16px | `rounded-2xl` | Карточки, модалы |
 | `radius-xl` | 24px | `rounded-3xl` | Hero секции |
 | `radius-full` | 9999px | `rounded-full` | Аватары, пилюли |
@@ -250,9 +253,11 @@
 
 | Size | Height | Padding | Font Size | Icon Size |
 |------|--------|---------|-----------|-----------|
-| **Small** | 36px | `py-2 px-4` | 14px | 16px |
-| **Medium** | 44px | `py-3 px-6` | 16px | 20px |
-| **Large** | 52px | `py-4 px-8` | 18px | 24px |
+| **Small** | ~42px | `py-2.5 px-5` | 14px | 16px |
+| **Medium** | ~48px | `py-3 px-7` | 14px | 20px |
+| **Large** | ~58px | `py-4 px-10` | 16px | 24px |
+
+Примечание: фиксированную высоту не задаём — используем padding, чтобы текст всегда «дышал» сверху/снизу.
 
 #### 1.3 Button States
 

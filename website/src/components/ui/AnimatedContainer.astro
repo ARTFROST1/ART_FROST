@@ -1,0 +1,95 @@
+---
+/**
+ * AnimatedContainer Component
+ * Container with hover animation effects
+ *
+ * @example
+ * <AnimatedContainer animation="lift">
+ *   Hover me to lift
+ * </AnimatedContainer>
+ *
+ * <AnimatedContainer animation="glow" trigger="always">
+ *   Always glowing
+ * </AnimatedContainer>
+ */
+
+import { cn } from '@lib/utils';
+
+interface Props {
+  /** Animation type */
+  animation?: 'lift' | 'glow' | 'scale' | 'border' | 'all';
+  /** Animation trigger */
+  trigger?: 'hover' | 'always' | 'focus';
+  /** Animation duration */
+  duration?: 'fast' | 'normal' | 'slow';
+  /** Additional CSS classes */
+  class?: string;
+  /** HTML element to render */
+  as?: 'div' | 'article' | 'section' | 'li';
+}
+
+const {
+  animation = 'lift',
+  trigger = 'hover',
+  duration = 'normal',
+  class: className,
+  as: Element = 'div',
+} = Astro.props;
+
+type AnimationType = 'lift' | 'glow' | 'scale' | 'border' | 'all';
+type TriggerType = 'hover' | 'always' | 'focus';
+type DurationType = 'fast' | 'normal' | 'slow';
+
+// Duration mapping
+const durationMap: Record<DurationType, string> = {
+  fast: 'duration-150',
+  normal: 'duration-300',
+  slow: 'duration-500',
+};
+
+// Base styles with transition
+const baseStyles = cn(
+  'transition-all ease-out',
+  durationMap[duration as DurationType]
+);
+
+// Animation styles based on type and trigger
+const animationStyles = {
+  lift: {
+    hover: 'hover:-translate-y-1',
+    always: '-translate-y-1',
+    focus: 'focus:-translate-y-1',
+  },
+  glow: {
+    hover: 'hover:shadow-[0_0_20px_-5px_var(--color-primary-glow)]',
+    always: 'shadow-[0_0_20px_-5px_var(--color-primary-glow)]',
+    focus: 'focus:shadow-[0_0_20px_-5px_var(--color-primary-glow)]',
+  },
+  scale: {
+    hover: 'hover:scale-[1.02]',
+    always: 'scale-[1.02]',
+    focus: 'focus:scale-[1.02]',
+  },
+  border: {
+    hover: 'hover:border-[var(--color-border-active)]/50',
+    always: 'border-[var(--color-border-active)]/50',
+    focus: 'focus:border-[var(--color-border-active)]/50',
+  },
+  all: {
+    hover: 'hover:-translate-y-1 hover:shadow-[0_0_20px_-5px_var(--color-primary-glow)] hover:scale-[1.02] hover:border-[var(--color-border-active)]/50',
+    always: '-translate-y-1 shadow-[0_0_20px_-5px_var(--color-primary-glow)] scale-[1.02] border-[var(--color-border-active)]/50',
+    focus: 'focus:-translate-y-1 focus:shadow-[0_0_20px_-5px_var(--color-primary-glow)] focus:scale-[1.02] focus:border-[var(--color-border-active)]/50',
+  },
+};
+
+// Combine styles
+const combinedStyles = cn(
+  baseStyles,
+  animationStyles[animation as AnimationType][trigger as TriggerType],
+  className
+);
+---
+
+<Element class={combinedStyles}>
+  <slot />
+</Element>

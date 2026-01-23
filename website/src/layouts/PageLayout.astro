@@ -1,0 +1,76 @@
+---
+/**
+ * PageLayout - основной layout для страниц с Header и Footer
+ * Extends BaseLayout, добавляет навигацию и структуру страницы
+ *
+ * @example
+ * <PageLayout title="О нас" description="Узнайте больше">
+ *   <h1>Контент страницы</h1>
+ * </PageLayout>
+ */
+
+import BaseLayout from './BaseLayout.astro';
+import SEOHead from '@components/seo/SEOHead.astro';
+import Header from '@components/layout/Header.astro';
+import Footer from '@components/layout/Footer.astro';
+
+interface Props {
+  /** Page title */
+  title?: string;
+  /** Meta description */
+  description?: string;
+  /** OG image path */
+  image?: string;
+  /** Page type for OG */
+  type?: 'website' | 'article';
+  /** Hide from search engines */
+  noindex?: boolean;
+  /** Show footer navigation */
+  showFooterNav?: boolean;
+  /** Additional body classes */
+  class?: string;
+}
+
+const {
+  title,
+  description,
+  image,
+  type = 'website',
+  noindex = false,
+  showFooterNav = false,
+  class: bodyClass,
+} = Astro.props;
+
+// Current path for navigation active state
+const currentPath = Astro.url.pathname;
+---
+
+<BaseLayout class={bodyClass}>
+  <!-- SEO Head -->
+  <SEOHead
+    slot="head"
+    title={title}
+    description={description}
+    image={image}
+    type={type}
+    noindex={noindex}
+  />
+  
+  <!-- Additional head slot -->
+  <slot name="head" slot="head" />
+
+  <!-- Header -->
+  <Header currentPath={currentPath} />
+
+  <!-- Main Content -->
+  <main
+    id="main-content"
+    class="flex-1 pt-24"
+    role="main"
+  >
+    <slot />
+  </main>
+
+  <!-- Footer -->
+  <Footer showNavigation={showFooterNav} />
+</BaseLayout>

@@ -1,0 +1,92 @@
+---
+/**
+ * ProjectGrid Component
+ * Responsive grid layout for project cards with Bento-style layout option
+ * 
+ * @example
+ * <ProjectGrid projects={projects} />
+ * <ProjectGrid projects={projects} layout="bento" />
+ */
+
+import { cn } from '@lib/utils';
+import ProjectCard from './ProjectCard.astro';
+import Icon from '@components/common/Icon.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  /** Array of projects from Content Collection */
+  projects: CollectionEntry<'projects'>[];
+  /** Grid layout variant */
+  layout?: 'grid' | 'bento';
+  /** Number of columns on desktop (for grid layout) */
+  columns?: 2 | 3 | 4;
+  /** Show featured badges */
+  showFeatured?: boolean;
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const {
+  projects,
+  layout = 'grid',
+  columns = 3,
+  showFeatured = true,
+  class: className,
+} = Astro.props;
+
+// Column configuration for standard grid
+const columnClasses = {
+  2: 'md:grid-cols-2',
+  3: 'md:grid-cols-2 lg:grid-cols-3',
+  4: 'md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+};
+---
+
+{projects.length > 0 ? (
+  <div
+    class={cn(
+      'grid grid-cols-1 gap-6 lg:gap-8',
+      layout === 'grid' && columnClasses[columns],
+      layout === 'bento' && 'md:grid-cols-2',
+      className
+    )}
+  >
+    {projects.map((project, index) => {
+      // For bento layout, first item is large
+      const isBentoLarge = layout === 'bento' && index === 0;
+      
+      return (
+        <div
+          class={cn(
+            isBentoLarge && 'md:col-span-2'
+          )}
+        >
+          <ProjectCard
+            project={project}
+            size={isBentoLarge ? 'large' : 'default'}
+            showFeatured={showFeatured}
+            animationDelay={index * 50}
+          />
+        </div>
+      );
+    })}
+  </div>
+) : (
+  /* Empty state */
+  <div class="relative z-10 text-center py-20">
+    <div class={cn(
+      'inline-flex items-center justify-center w-16 h-16 mb-6',
+      'rounded-full',
+      'bg-[var(--color-bg-secondary)]',
+      'border border-[var(--color-border-glass)]'
+    )}>
+      <Icon name="folder" size="lg" class="text-[var(--color-text-muted)]" />
+    </div>
+    <h3 class="heading-card mb-2 text-[var(--color-text-muted)]">
+      Проектов пока нет
+    </h3>
+    <p class="body-small text-[var(--color-text-muted)]">
+      Скоро здесь появятся интересные проекты
+    </p>
+  </div>
+)}

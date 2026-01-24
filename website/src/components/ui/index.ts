@@ -13,4 +13,7 @@
 // import AnimatedContainer from '@components/ui/AnimatedContainer.astro';
 // import ResponsiveImage from '@components/ui/ResponsiveImage.astro';
 
+// React components can be exported
+export { default as ScrollFrameAnimation } from './ScrollFrameAnimation';
+
 export {};

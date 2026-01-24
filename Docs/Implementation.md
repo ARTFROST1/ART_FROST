@@ -214,7 +214,6 @@
 - [x] Создать `fonts.css` с @font-face для Inter, Roboto, JetBrains Mono
 - [x] Добавить utility классы: `.glass`, `.glow-primary`, `.text-glow`
 - [x] Добавить `prefers-reduced-motion` media query
-- [x] Важно: не использовать reset `* { padding: 0; margin: 0; }` в `global.css` — это ломает Tailwind spacing (`px-*`, `py-*`) и приводит к «прилипшим» кнопкам/меню.
 
 ### 2.2 Typography System
 
@@ -302,12 +301,6 @@
   - Sizes: sm, md, lg
   - Props: href, disabled, fullWidth
   - Hover/focus states с glow effect
-  - Зафиксировать форму и отступы как в референсе:
-    - Radius: `rounded-xl` (не `rounded-full`)
-    - SM: `px-5 py-2.5`
-    - MD: `px-7 py-3`
-    - LG: `px-10 py-4`
-  - Использовать `Button.astro` для всех CTA (Hero + Header), не оставлять «ручные» `<a class=...>` с отдельными стилями.
 - [x] Создать `Card.astro`:
   - Glass background с backdrop-blur
   - Border glass style
@@ -357,9 +350,6 @@
 - [x] Создать `Navigation.astro`:
   - Desktop navigation links
   - Active state для текущей страницы
-  - Обязательный `gap` между пунктами (не 0)
-  - Паддинги у каждого пункта навигации (как у tab-кнопки) и паддинг у контейнера (pill)
-  - Radius: tabs `rounded-xl`, container `rounded-2xl` (без `rounded-full`)
 - [x] Создать `MobileMenu.tsx` (React):
   - Hamburger button
   - Full-screen overlay с menu items

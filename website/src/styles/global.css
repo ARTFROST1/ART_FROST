@@ -118,6 +118,73 @@ main {
   border-radius: 16px;
 }
 
+/* ===== PAGE BACKGROUND LAYERING (GRID + AMBIENT + VIGNETTE) ===== */
+
+.page-bg {
+  position: relative;
+  background: var(--color-bg-primary);
+}
+
+.page-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.08;
+  mask-image: radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 70%);
+  -webkit-mask-image: radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.page-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(16, 185, 129, 0.16) 0%, transparent 55%),
+    radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.10) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.75) 100%);
+  opacity: 1;
+}
+
+/* ===== SECTION FRAMES (MEGA-PANELS) ===== */
+
+.section-frame {
+  position: relative;
+  border-radius: 32px;
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-glass-strong);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 20px 60px -30px rgba(0, 0, 0, 0.7);
+}
+
+.section-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.03) 35%,
+    rgba(255, 255, 255, 0.00) 60%
+  );
+  opacity: 0.55;
+}
+
+.section-frame > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Primary Glow Effect */
 .glow-primary {
   box-shadow: 0 0 40px -10px var(--color-primary-glow);
@@ -359,6 +426,53 @@ main {
   transform: translateY(0);
 }
 
+/* ===== GLOBAL ANIMATION KEYFRAMES ===== */
+
+/* Fade in up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+/* Float animation for 3D assets */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Subtle pulse for badges/indicators */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
 /* Staggered delays for child elements */
 .animate-on-scroll:nth-child(1) { transition-delay: 0ms; }
 .animate-on-scroll:nth-child(2) { transition-delay: 100ms; }
@@ -421,10 +535,14 @@ main {
   .animate-slide-left,
   .animate-slide-right,
   .animate-scale-up,
-  .animate-blur-in {
+  .animate-blur-in,
+  .animate-fade-in-up,
+  .animate-float,
+  .animate-pulse-subtle {
     opacity: 1;
     transform: none;
     filter: none;
     transition: none;
+    animation: none;
   }
 }

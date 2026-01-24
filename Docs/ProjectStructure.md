@@ -26,6 +26,7 @@ artfrost-portfolio/
 ├── .vscode/                    # VS Code настройки
 ├── public/                     # Статические файлы (без обработки)
 ├── src/                        # Исходный код
+├── scripts/                    # CLI скрипты
 ├── tests/                      # Тесты (Phase 2+)
 ├── .env.example                # Пример переменных окружения
 ├── .eslintrc.js                # ESLint Flat Config
@@ -47,7 +48,32 @@ artfrost-portfolio/
 | `tsconfig.json` | TypeScript: strict mode, path aliases (`@/*`, `@components/*`, `@lib/*`) |
 | `vercel.json` | Vercel: headers, redirects, regions |
 | `.env.example` | Шаблон переменных окружения для локальной разработки |
-| `package.json` | npm scripts: `dev`, `build`, `preview`, `lint`, `format` |
+| `package.json` | npm scripts: `dev`, `build`, `preview`, `lint`, `format`, `new:project` |
+
+---
+
+## scripts/
+
+```
+scripts/
+├── create-project.mjs          # CLI для создания нового проекта
+└── download-fonts.sh           # Скрипт загрузки шрифтов
+```
+
+### create-project.mjs
+
+Интерактивный Node.js скрипт для создания новых проектов:
+
+```bash
+npm run new:project
+```
+
+Функционал:
+- Задаёт вопросы о проекте (название, описание, теги и т.д.)
+- Автоматически генерирует slug из названия (с транслитерацией)
+- Создаёт папку для изображений проекта
+- Проверяет на дубликаты slug
+- Сохраняет валидный JSON-файл
 
 ---
 
@@ -266,6 +292,56 @@ const projects = defineCollection({
 
 export const collections = { projects };
 ```
+
+### Система управления проектами
+
+Проекты хранятся как JSON-файлы в `src/content/projects/`. Для добавления нового проекта есть три способа:
+
+#### Способ 1: CLI скрипт (рекомендуется)
+
+```bash
+npm run new:project
+```
+
+Интерактивный скрипт `scripts/create-project.mjs` задаёт вопросы и создаёт готовый JSON-файл.
+
+#### Способ 2: Копирование шаблона
+
+1. Скопировать `src/content/projects/_template.json`
+2. Переименовать в `project-slug.json`
+3. Удалить поля с `_` (комментарии)
+4. Заполнить данные
+
+#### Способ 3: Создание вручную
+
+Создать JSON-файл по схеме ниже.
+
+### Project JSON Schema
+
+| Поле | Тип | Обязательное | Описание |
+|------|-----|--------------|----------|
+| `title` | string | ✅ | Название проекта |
+| `description` | string | ✅ | Полное описание (markdown) |
+| `shortDescription` | string | - | Краткое описание (макс 160 символов) |
+| `image` | string | - | Путь к главному изображению |
+| `images` | string[] | - | Дополнительные скриншоты |
+| `tags` | string[] | - | Теги технологий |
+| `github` | string | - | URL GitHub репозитория |
+| `demo` | string | - | URL демо/продакшн |
+| `links` | object[] | - | Другие ссылки |
+| `featured` | boolean | - | Показать на главной |
+| `order` | number | - | Порядок сортировки |
+| `date` | string | - | Дата старта (YYYY-MM) |
+| `completedDate` | string | - | Дата завершения |
+| `status` | enum | - | completed / in-progress / planned / archived |
+| `type` | enum | - | website / app / library / tool / template / other |
+| `role` | string | - | Роль в проекте |
+| `teamSize` | number | - | Размер команды |
+| `highlights` | string[] | - | Ключевые достижения |
+| `seoTitle` | string | - | Кастомный SEO title |
+| `seoDescription` | string | - | Кастомный SEO description |
+| `ogImage` | string | - | Кастомное OG-изображение |
+| `draft` | boolean | - | Скрыть из списков |
 
 ### Project JSON Example
 

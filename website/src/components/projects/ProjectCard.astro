@@ -1,0 +1,292 @@
+---
+/**
+ * ProjectCard Component
+ * Glass card with project preview, tags, and hover effects
+ * 
+ * @example
+ * <ProjectCard project={project} />
+ * <ProjectCard project={project} featured size="large" />
+ */
+
+import { cn } from '@lib/utils';
+import Card from '@components/common/Card.astro';
+import Tag from '@components/common/Tag.astro';
+import Icon from '@components/common/Icon.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  /** Project data from Content Collection */
+  project: CollectionEntry<'projects'>;
+  /** Card size variant */
+  size?: 'default' | 'large' | 'compact';
+  /** Show featured badge */
+  showFeatured?: boolean;
+  /** Animation delay in ms */
+  animationDelay?: number;
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const {
+  project,
+  size = 'default',
+  showFeatured = true,
+  animationDelay = 0,
+  class: className,
+} = Astro.props;
+
+const { data } = project;
+
+// Status configuration
+const statusConfig = {
+  completed: {
+    label: 'Завершён',
+    classes: 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400',
+  },
+  'in-progress': {
+    label: 'В работе',
+    classes: 'bg-amber-500/10 border-amber-500/40 text-amber-400',
+  },
+  planned: {
+    label: 'Планируется',
+    classes: 'bg-sky-500/10 border-sky-500/40 text-sky-400',
+  },
+  archived: {
+    label: 'Архив',
+    classes: 'bg-zinc-500/10 border-zinc-500/40 text-zinc-400',
+  },
+} as const;
+
+// Size-based aspect ratios
+const aspectRatios = {
+  default: 'aspect-video',
+  large: 'aspect-[21/9]',
+  compact: 'aspect-[4/3]',
+};
+
+// Max tags to show based on size
+const maxTags = size === 'compact' ? 2 : 3;
+---
+
+<article
+  class={cn(
+    'animate-on-scroll group/card',
+    className
+  )}
+  style={animationDelay ? `animation-delay: ${animationDelay}ms;` : undefined}
+>
+  <Card
+    href={`/projects/${project.id}`}
+    hover
+    padding="none"
+    gradient
+    class={cn(
+      'relative overflow-hidden h-full',
+      'shadow-[0_20px_60px_-30px_rgba(0,0,0,0.7)]',
+      // Inner highlight gradient
+      'before:absolute before:inset-0 before:rounded-[inherit] before:pointer-events-none before:z-10',
+      'before:bg-gradient-to-b before:from-white/[0.06] before:via-white/[0.01] before:to-transparent',
+      // Hover effects
+      'hover:shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9),0_0_40px_-15px_var(--color-primary-glow)]',
+      'hover:-translate-y-2 transition-all duration-300 ease-out'
+    )}
+  >
+    <!-- Project Image -->
+    <div class={cn('relative overflow-hidden', aspectRatios[size])}>
+      {data.image ? (
+        <img
+          src={data.image}
+          alt={data.title}
+          class={cn(
+            'absolute inset-0 w-full h-full object-cover',
+            'transition-transform duration-500 ease-out',
+            'group-hover/card:scale-110'
+          )}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <>
+          {/* Fallback gradient when no image */}
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-bg-primary)]"
+          />
+          
+          {/* Decorative dot pattern */}
+          <div
+            class="absolute inset-0 opacity-30"
+            style="background-image: radial-gradient(circle at 2px 2px, var(--color-border-glass) 1px, transparent 1px); background-size: 24px 24px;"
+          />
+          
+          {/* Centered placeholder icon */}
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class={cn(
+              'p-6 rounded-2xl',
+              'bg-[var(--color-bg-glass)] backdrop-blur-sm',
+              'border border-[var(--color-border-glass)]'
+            )}>
+              <Icon name="folder" size="xl" class="text-[var(--color-text-muted)]" />
+            </div>
+          </div>
+        </>
+      )}
+      
+      {/* Hover overlay gradient */}
+      <div
+        class={cn(
+          'absolute inset-0 z-[1]',
+          'bg-gradient-to-t from-[var(--color-bg-primary)]/90 via-[var(--color-bg-primary)]/40 to-transparent',
+          'opacity-0 group-hover/card:opacity-100',
+          'transition-opacity duration-500'
+        )}
+      />
+      
+      {/* Status badge */}
+      <div class="absolute top-4 left-4 z-20">
+        <div class={cn(
+          'px-3 py-1 text-xs font-medium uppercase tracking-wider rounded-full',
+          'backdrop-blur-md border',
+          statusConfig[data.status || 'completed'].classes
+        )}>
+          {statusConfig[data.status || 'completed'].label}
+        </div>
+      </div>
+
+      {/* Featured badge */}
+      {showFeatured && data.featured && (
+        <div class="absolute top-4 right-4 z-20">
+          <div class={cn(
+            'flex items-center gap-1.5 px-3 py-1',
+            'bg-[var(--color-primary)]/10 backdrop-blur-md',
+            'border border-[var(--color-primary)]/40',
+            'rounded-full'
+          )}>
+            <svg class="w-3 h-3 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            <span class="text-xs font-medium text-[var(--color-primary)]">Featured</span>
+          </div>
+        </div>
+      )}
+      
+      {/* Quick action buttons (visible on hover) */}
+      {(data.github || data.demo) && (
+        <div class={cn(
+          'absolute bottom-4 right-4 z-20',
+          'flex gap-2',
+          'opacity-0 translate-y-2',
+          'group-hover/card:opacity-100 group-hover/card:translate-y-0',
+          'transition-all duration-300 delay-100'
+        )}>
+          {data.demo && (
+            <a
+              href={data.demo}
+              target="_blank"
+              rel="noopener noreferrer"
+              class={cn(
+                'flex items-center justify-center w-10 h-10',
+                'bg-[var(--color-bg-glass-strong)] backdrop-blur-md',
+                'border border-[var(--color-border-glass-strong)]',
+                'rounded-xl',
+                'text-[var(--color-text-body)] hover:text-[var(--color-primary)]',
+                'hover:border-[var(--color-primary)]/50',
+                'transition-colors duration-200'
+              )}
+              onclick="event.stopPropagation();"
+              aria-label="Open demo"
+            >
+              <Icon name="external-link" size="sm" />
+            </a>
+          )}
+          {data.github && (
+            <a
+              href={data.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class={cn(
+                'flex items-center justify-center w-10 h-10',
+                'bg-[var(--color-bg-glass-strong)] backdrop-blur-md',
+                'border border-[var(--color-border-glass-strong)]',
+                'rounded-xl',
+                'text-[var(--color-text-body)] hover:text-[var(--color-primary)]',
+                'hover:border-[var(--color-primary)]/50',
+                'transition-colors duration-200'
+              )}
+              onclick="event.stopPropagation();"
+              aria-label="View on GitHub"
+            >
+              <Icon name="github" size="sm" />
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+
+    <!-- Project Info -->
+    <div class="relative p-6 border-t border-[var(--color-border-glass)]">
+      {/* Top highlight line */}
+      <div 
+        class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" 
+        aria-hidden="true" 
+      />
+      
+      {/* Tags */}
+      <div class="flex flex-wrap gap-2 mb-4">
+        {data.tags.slice(0, maxTags).map((tag: string) => (
+          <Tag variant="default" size="sm">
+            {tag}
+          </Tag>
+        ))}
+        {data.tags.length > maxTags && (
+          <Tag variant="outline" size="sm">
+            +{data.tags.length - maxTags}
+          </Tag>
+        )}
+      </div>
+
+      {/* Title */}
+      <h3 class={cn(
+        size === 'large' ? 'heading-section' : 'heading-card',
+        'mb-2',
+        'group-hover/card:text-[var(--color-primary)]',
+        'transition-colors duration-200'
+      )}>
+        {data.title}
+      </h3>
+
+      {/* Description */}
+      <p class={cn(
+        'body-small text-[var(--color-text-muted)] mb-4',
+        size === 'compact' ? 'line-clamp-1' : 'line-clamp-2'
+      )}>
+        {data.shortDescription || data.description}
+      </p>
+
+      {/* View link */}
+      <span class={cn(
+        'inline-flex items-center gap-2',
+        'text-sm font-medium text-[var(--color-primary)]',
+        'group-hover/card:gap-3 transition-all duration-200'
+      )}>
+        Подробнее
+        <Icon name="arrow-right" size="sm" />
+      </span>
+    </div>
+  </Card>
+</article>
+
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

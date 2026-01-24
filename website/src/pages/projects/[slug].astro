@@ -1,0 +1,114 @@
+---
+/**
+ * Individual Project Page
+ * Dynamic page for each project based on slug
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import BreadcrumbJsonLd from '@components/seo/BreadcrumbJsonLd.astro';
+import CreativeWorkJsonLd from '@components/seo/CreativeWorkJsonLd.astro';
+import { ProjectDetail } from '@components/projects';
+import { siteConfig } from '@data/site-config';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  
+  return projects
+    .filter(project => !project.data.draft)
+    .map((project) => ({
+      params: { slug: project.id },
+      props: { project },
+    }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { data } = project;
+
+// Page SEO
+const title = data.seoTitle || data.title;
+const description = data.seoDescription || data.shortDescription || data.description;
+const image = data.ogImage || data.image || '/assets/images/og/projects.png';
+
+// Breadcrumb items
+const breadcrumbItems = [
+  { name: 'Главная', url: '/' },
+  { name: 'Проекты', url: '/projects' },
+  { name: data.title, url: `/projects/${project.id}` },
+];
+
+// Format date for schema
+const formatSchemaDate = (dateStr?: string) => {
+  if (!dateStr) return undefined;
+  // Handle partial dates like "2026-01"
+  if (dateStr.length === 7) {
+    return `${dateStr}-01`;
+  }
+  return dateStr;
+};
+
+// Determine work type for schema
+const workTypeMap = {
+  website: 'WebSite' as const,
+  app: 'SoftwareApplication' as const,
+  library: 'SoftwareApplication' as const,
+  tool: 'SoftwareApplication' as const,
+  template: 'CreativeWork' as const,
+  other: 'CreativeWork' as const,
+};
+const schemaWorkType = workTypeMap[data.type || 'other'];
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  image={image}
+  type="article"
+>
+  <!-- JSON-LD Schemas -->
+  <BreadcrumbJsonLd slot="head" items={breadcrumbItems} />
+  <CreativeWorkJsonLd
+    slot="head"
+    name={data.title}
+    description={data.description}
+    url={`/projects/${project.id}`}
+    image={data.image}
+    dateCreated={formatSchemaDate(data.date)}
+    datePublished={formatSchemaDate(data.date)}
+    technologies={data.tags}
+    codeRepository={data.github}
+    demoUrl={data.demo}
+    workType={schemaWorkType}
+  />
+
+  <!-- Project Content -->
+  <ProjectDetail project={project} />
+</PageLayout>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -100px 0px',
+    threshold: 0.1,
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-visible');
+      }
+    });
+  }, observerOptions);
+
+  const initAnimations = () => {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach((el) => observer.observe(el));
+  };
+
+  document.addEventListener('DOMContentLoaded', initAnimations);
+  document.addEventListener('astro:page-load', initAnimations);
+</script>

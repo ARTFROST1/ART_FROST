@@ -1,0 +1,247 @@
+---
+/**
+ * AboutHero Component
+ * Two-column layout with 3D avatar and personal information
+ * Features: Glassmorphism card, glow effects, status badge, bio text
+ *
+ * @example
+ * <AboutHero />
+ */
+
+import { cn } from '@lib/utils';
+import Container from '@components/common/Container.astro';
+import Button from '@components/common/Button.astro';
+import Tag from '@components/common/Tag.astro';
+import { profile, profileHighlights, currentFocus } from '@data/profile';
+
+interface Props {
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+// Status indicator colors
+const statusColors = {
+  available: {
+    bg: 'bg-emerald-500/20',
+    text: 'text-emerald-400',
+    dot: 'bg-emerald-500',
+    glow: 'shadow-[0_0_12px_rgba(52,211,153,0.5)]',
+  },
+  busy: {
+    bg: 'bg-amber-500/20',
+    text: 'text-amber-400',
+    dot: 'bg-amber-500',
+    glow: 'shadow-[0_0_12px_rgba(251,191,36,0.5)]',
+  },
+  'not-available': {
+    bg: 'bg-red-500/20',
+    text: 'text-red-400',
+    dot: 'bg-red-500',
+    glow: 'shadow-[0_0_12px_rgba(239,68,68,0.5)]',
+  },
+};
+
+const currentStatus = statusColors[profile.status];
+---
+
+<section
+  class={cn(
+    'relative min-h-[60vh] flex items-center overflow-hidden',
+    'py-16 md:py-24 lg:py-32',
+    className
+  )}
+  aria-label="О себе"
+>
+  <!-- Background Glow Effects -->
+  <div
+    class="absolute inset-0 pointer-events-none overflow-hidden"
+    aria-hidden="true"
+  >
+    <!-- Subtle grid overlay (reference-style) -->
+    <div
+      class="absolute inset-0 opacity-[0.07]"
+      style="background-image: linear-gradient(to bottom, rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(to right, rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(circle at 45% 25%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);"
+    />
+    <!-- Primary glow - top right -->
+    <div
+      class="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] rounded-full opacity-15"
+      style="background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);"
+    />
+    <!-- Secondary glow - bottom left -->
+    <div
+      class="absolute -bottom-1/4 -left-1/4 w-[500px] h-[500px] rounded-full opacity-10"
+      style="background: radial-gradient(circle, var(--color-gradient-end) 0%, transparent 70%);"
+    />
+  </div>
+
+  <Container size="xl" class="relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-center">
+      
+      <!-- Left Column: Photo (2/5 width on desktop) -->
+      <div
+        class="lg:col-span-2 flex items-center justify-center animate-on-scroll"
+        style="transition-delay: 100ms;"
+      >
+        <div class="relative w-full max-w-sm">
+          <!-- Photo container with subtle rect frame (reference style) -->
+          <div
+            class={cn(
+              'relative w-full aspect-[3/4] rounded-2xl overflow-hidden',
+              'border border-[var(--color-border-glass-strong)]',
+              'shadow-[0_0_40px_-10px_var(--color-primary-glow)]',
+              'bg-[var(--color-bg-glass)]'
+            )}
+          >
+            <!-- Replace with actual photo (not circular avatar) -->
+            <img
+              src={profile.avatar}
+              alt={`Фото ${profile.name}`}
+              class="w-full h-full object-cover object-center"
+              loading="eager"
+              fetchpriority="high"
+            />
+            
+            <!-- Subtle overlay gradient -->
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"
+              aria-hidden="true"
+            />
+          </div>
+
+          <!-- Decorative accent corner -->
+          <div
+            class="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[var(--color-primary)]/40 rounded-tr-xl"
+            aria-hidden="true"
+          />
+          <div
+            class="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[var(--color-primary)]/40 rounded-bl-xl"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+
+      <!-- Right Column: Text Content (3/5 width on desktop) -->
+      <div
+        class="lg:col-span-3 flex flex-col gap-6 text-center lg:text-left animate-on-scroll"
+        style="transition-delay: 200ms;"
+      >
+            <!-- Status Badge -->
+            <div class="flex justify-center lg:justify-start">
+              <span
+                class={cn(
+                  'inline-flex items-center gap-2 px-4 py-2 rounded-full',
+                  currentStatus.bg,
+                  currentStatus.text,
+                  'text-sm font-medium'
+                )}
+              >
+                <span
+                  class={cn(
+                    'w-2 h-2 rounded-full animate-pulse',
+                    currentStatus.dot,
+                    currentStatus.glow
+                  )}
+                />
+                {profile.statusMessage || (profile.status === 'available' ? 'Открыт для проектов' : 'Занят')}
+              </span>
+            </div>
+
+            <!-- Name & Title -->
+            <div>
+              <h1 class="heading-hero mb-3">
+                <span class="block text-[var(--color-text-body)] font-normal text-lg md:text-xl mb-2">
+                  Обо мне
+                </span>
+                <span class="block bg-gradient-to-r from-white via-white/80 to-white/40 bg-clip-text text-transparent">
+                  {profile.name}
+                </span>
+              </h1>
+              <p class="text-xl md:text-2xl text-[var(--color-primary)] font-semibold">
+                {profile.title}
+              </p>
+            </div>
+
+            <!-- Bio -->
+            <div class="body-large max-w-2xl mx-auto lg:mx-0 space-y-4">
+              {profile.bio.split('\n\n').map((paragraph, idx) => (
+                <p class="text-[var(--color-text-body)] leading-relaxed" data-idx={idx}>
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+
+            <!-- Current Focus -->
+            <div>
+              <h3 class="text-sm uppercase tracking-wider text-[var(--color-text-muted)] mb-3 font-semibold">
+                Сейчас фокусируюсь на
+              </h3>
+              <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
+                {currentFocus.map((focus) => (
+                  <Tag variant="primary" size="sm">
+                    {focus}
+                  </Tag>
+                ))}
+              </div>
+            </div>
+
+            <!-- Highlights / Stats -->
+            <div class="flex flex-wrap gap-8 justify-center lg:justify-start mt-2 pt-6 border-t border-[var(--color-border-glass)]">
+              {profileHighlights.map((highlight) => (
+                <div class="text-center lg:text-left">
+                  <span class="block text-3xl md:text-4xl font-bold text-[var(--color-text-heading)]">
+                    {highlight.value}
+                  </span>
+                  <span class="text-sm text-[var(--color-text-muted)]">
+                    {highlight.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-4">
+              <Button href="https://t.me/artfrost" external variant="primary" size="lg">
+                Связаться со мной
+              </Button>
+              {profile.resumeUrl && (
+                <Button href={profile.resumeUrl} variant="secondary" size="lg">
+                  Скачать резюме
+                </Button>
+              )}
+            </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  /* Slow pulse animation */
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 0.2;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+
+  /* Slow spin for decorative elements */
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 20s linear infinite;
+  }
+</style>

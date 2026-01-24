@@ -1,0 +1,90 @@
+{
+  "$schema": "./project.schema.json",
+  "_comment": "=== ШАБЛОН ПРОЕКТА для Art Frost Portfolio ===",
+  "_instructions": [
+    "1. Скопируй этот файл и переименуй в: project-slug.json",
+    "2. Удали все поля с _ в начале (комментарии)",
+    "3. Заполни обязательные поля (отмечены *)",
+    "4. Добавь изображение в public/assets/images/projects/",
+    "5. Запусти npm run dev и проверь результат"
+  ],
+
+  "_title*": "Название проекта — отображается везде",
+  "title": "Название проекта",
+
+  "_description*": "Полное описание проекта. Поддерживает markdown: **жирный**, *курсив*, `код`",
+  "description": "Подробное описание проекта. Расскажи что это за проект, какую проблему решает, какие технологии использовал и почему.",
+
+  "_shortDescription": "Короткое описание для карточки (макс 160 символов). Если не указать — возьмётся начало description",
+  "shortDescription": "Краткое описание для карточки проекта.",
+
+  "_image": "Путь к главному изображению. Файл должен лежать в public/",
+  "image": "/assets/images/projects/project-slug.png",
+
+  "_images": "Дополнительные скриншоты для галереи (опционально)",
+  "images": [
+    "/assets/images/projects/project-slug/screen1.png",
+    "/assets/images/projects/project-slug/screen2.png"
+  ],
+
+  "_tags*": "Теги технологий. Используй популярные: React, TypeScript, Astro, Next.js, Tailwind CSS, Node.js, Python, etc.",
+  "tags": ["React", "TypeScript", "Tailwind CSS"],
+
+  "_github": "Ссылка на GitHub репозиторий (если публичный)",
+  "github": "https://github.com/artfrost/project-name",
+
+  "_demo": "Ссылка на демо/продакшн версию",
+  "demo": "https://project-name.vercel.app",
+
+  "_links": "Другие ссылки: статья, видео, App Store и т.д.",
+  "links": [
+    {
+      "label": "Статья на Хабре",
+      "url": "https://habr.com/...",
+      "icon": "article"
+    }
+  ],
+
+  "_featured": "Показывать на главной странице в секции Featured Projects",
+  "featured": false,
+
+  "_order": "Порядок сортировки. Меньше = выше в списке. 1 = первый",
+  "order": 10,
+
+  "_date": "Дата начала проекта в формате YYYY-MM",
+  "date": "2024-01",
+
+  "_completedDate": "Дата завершения (если проект завершён)",
+  "completedDate": "2024-03",
+
+  "_status": "Статус: completed | in-progress | planned | archived",
+  "status": "completed",
+
+  "_type": "Тип: website | app | library | tool | template | other",
+  "type": "website",
+
+  "_role": "Твоя роль в проекте",
+  "role": "Full-Stack Developer",
+
+  "_teamSize": "Размер команды (если работал не один)",
+  "teamSize": 1,
+
+  "_highlights": "Ключевые достижения и метрики",
+  "highlights": [
+    "Lighthouse 95+",
+    "1000+ пользователей",
+    "Zero downtime"
+  ],
+
+  "_seoTitle": "Кастомный title для SEO (если отличается от title)",
+  "seoTitle": "",
+
+  "_seoDescription": "Кастомный description для SEO",
+  "seoDescription": "",
+
+  "_ogImage": "Кастомное OG-изображение для соцсетей (1200x630)",
+  "ogImage": "",
+
+  "_draft": "true = скрыть из списков (черновик)",
+  "draft": false
+}

@@ -200,6 +200,99 @@
 }
 ```
 
+#### 4.4 Reference Layered Background (Grid + Ambient Glow)
+
+Референсы показывают повторяющийся паттерн «ambient UI»:
+
+1) **Base**: глубокий темный фон (почти чёрный с зелёным оттенком)
+2) **Large glows**: 2–4 больших радиальных свечения (очень мягкие, с низкой opacity)
+3) **Grid overlay**: тонкая сетка (редкая, 48–80px шаг), чаще с mask/vignette
+4) **Vignette**: затемнение по краям для фокуса на контенте
+5) (опционально) **Noise**: очень лёгкая зернистость, чтобы убрать «пластик»
+
+Важно: **Hero и Header текущей главной страницы считаются эталоном** и не меняются этим документом; ниже — правила для остальных секций/страниц.
+
+Пример (концептуально) для общего фонового слоя страницы:
+
+```css
+/* Page background layering */
+.page-bg {
+  position: relative;
+  background: var(--color-bg-primary);
+}
+
+.page-bg::before {
+  /* Grid overlay */
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.25;
+  mask-image: radial-gradient(circle at 50% 30%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
+}
+
+.page-bg::after {
+  /* Vignette + ambient glow */
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(16,185,129,0.20) 0%, transparent 55%),
+    radial-gradient(circle at 20% 80%, rgba(16,185,129,0.12) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.75) 100%);
+}
+```
+
+Рекомендации по значениям:
+- **blur**: 14–20px для больших «пятен», 10–16px для стекла
+- **grid opacity**: итоговая видимость очень низкая (обычно 2–6% по ощущению)
+- **glow opacity**: не «неон», а мягкое освещение (10–25%)
+
+#### 4.5 Section Frames (Mega-panels)
+
+В референсах крупные блоки часто живут внутри большого скругленного «фрейма» (как контейнер-секция):
+- большой радиус (24–32px)
+- 1px glass border
+- лёгкий внутренний highlight (inset)
+- иногда дополнительный внешний shadow для отделения от фона
+
+Это паттерн для секций типа: Features, About, Services, Pricing/Packages, FAQ.
+
+```css
+.section-frame {
+  position: relative;
+  border-radius: 32px;
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 20px 60px -30px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.section-frame::before {
+  /* Subtle gradient sheen (верхний блик) */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.06) 0%,
+    rgba(255,255,255,0.01) 45%,
+    rgba(255,255,255,0.00) 100%
+  );
+}
+```
+
+
 ---
 
 ### 5. Border & Radius
@@ -314,6 +407,29 @@
 | **Project Card** | Project gallery | Image + info + hover effect |
 | **Link Card** | Links page | Icon + title + hover glow |
 | **Blog Card** | Blog posts | Featured image + meta |
+
+#### 2.1.1 Reference Card Language (Panels + Inset)
+
+Референсы используют карточки как «панели интерфейса»:
+- заметное скругление (16–24px)
+- **двойная граница** по ощущению: внешний glass border + внутренний слабый inset highlight
+- контент часто лежит на тёмной подложке, но с едва заметным зеленым ambient
+- hover: подъём + усиление border/inner highlight, но без резкой смены цвета
+
+Практический паттерн:
+- базовая карточка: `.glass` / `.glass-strong`
+- для «главной/featured» карточки: добавить gradient sheen + более сильный shadow
+
+#### 2.1.2 Screenshot / Dashboard Card
+
+Из референсов: блоки с превью интерфейса выглядят как мини-дешборды внутри панели.
+
+Рекомендации:
+- фиксировать aspect ratio (16:9, 4:3, 1:1)
+- клипать контент по радиусу (overflow-hidden)
+- добавить верхнюю «панель окна» (если уместно) как декоративный элемент
+- поверх картинки допустим тонкий зеленый overlay (2–6% opacity), чтобы связать с брендом
+
 
 #### 2.2 Glass Card Structure
 
@@ -465,6 +581,56 @@
   </nav>
 </header>
 ```
+
+---
+
+## Reference-driven Layout Patterns (for future sections)
+
+Этот раздел фиксирует паттерны, «впитанные» из приложенных референсов, чтобы все новые страницы выглядели единым продуктом.
+
+### 1. Bento Grids (Mosaic Layout)
+
+Характерно:
+- сетка из панелей разного размера (1x1, 2x1, 2x2)
+- одинаковые радиусы и рамки, чтобы всё смотрелось как единый интерфейс
+- внутри — либо текст+иконка, либо превью/скрин, либо метрики
+
+Правила:
+- gap: 20–28px (на desktop), 12–16px (mobile)
+- «главная» панель в строке всегда сильнее (больше, ярче border/ glow)
+- не перегружать: 1 смысловой акцент на панель
+
+### 2. Metrics Row (как в hero референсов)
+
+Паттерн: строка с 3–4 метриками, где большие числа — главный ритм.
+
+Правила:
+- числа 28–40px, подписи 12–14px
+- разделители: 1px border-glass, либо вертикальные линии между метриками
+- допускается легкий glow на активной метрике (hover)
+
+### 3. Packages / Pricing-style Cards (адаптация под «услуги/пакеты»)
+
+Даже если это не SaaS, референсы дают хороший шаблон для «пакетов сотрудничества»:
+- 3 карточки в ряд
+- центральная выделена (слегка выше, сильнее border, больше glow)
+- CTA внутри каждой карточки
+
+Правила:
+- «Recommended» badge: pill с иконкой и тонкой обводкой primary
+- список преимуществ: короткие строки, иконка-галка (Lucide)
+- hover: подъём + усиление inner highlight
+
+### 4. Section Rhythm
+
+Референсы очень аккуратно держат ритм:
+- секции часто выглядят как отдельные «экраны» внутри большого rounded фрейма
+- много воздуха сверху/снизу
+- всегда есть подзаголовок/лейбл над H2 (маленький pill/eyebrow)
+
+Рекомендация: для новых страниц использовать структуру
+`eyebrow -> H2 -> supporting text -> grid/panels -> CTA`.
+
 
 ---
 

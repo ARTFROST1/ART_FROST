@@ -1,0 +1,455 @@
+---
+/**
+ * ProjectDetail Component
+ * Full project information display with hero, gallery, and details
+ * Used on individual project pages (/projects/[slug])
+ * 
+ * @example
+ * <ProjectDetail project={project} />
+ */
+
+import { cn } from '@lib/utils';
+import Container from '@components/common/Container.astro';
+import Button from '@components/common/Button.astro';
+import Tag from '@components/common/Tag.astro';
+import Icon from '@components/common/Icon.astro';
+import Card from '@components/common/Card.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  /** Project data from Content Collection */
+  project: CollectionEntry<'projects'>;
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { project, class: className } = Astro.props;
+const { data } = project;
+
+// Status configuration
+const statusConfig = {
+  completed: {
+    label: 'Завершён',
+    classes: 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400',
+    icon: 'check',
+  },
+  'in-progress': {
+    label: 'В разработке',
+    classes: 'bg-amber-500/10 border-amber-500/40 text-amber-400',
+    icon: 'clock',
+  },
+  planned: {
+    label: 'Планируется',
+    classes: 'bg-sky-500/10 border-sky-500/40 text-sky-400',
+    icon: 'calendar',
+  },
+  archived: {
+    label: 'Архив',
+    classes: 'bg-zinc-500/10 border-zinc-500/40 text-zinc-400',
+    icon: 'archive',
+  },
+} as const;
+
+// Type labels
+const typeLabels = {
+  website: 'Веб-сайт',
+  app: 'Приложение',
+  library: 'Библиотека',
+  tool: 'Инструмент',
+  template: 'Шаблон',
+  other: 'Проект',
+} as const;
+
+// Format date
+const formatDate = (dateStr?: string) => {
+  if (!dateStr) return null;
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('ru-RU', {
+    year: 'numeric',
+    month: 'long',
+  });
+};
+
+const currentStatus = statusConfig[data.status || 'completed'];
+const projectType = typeLabels[data.type || 'other'];
+const startDate = formatDate(data.date);
+const completedDate = formatDate(data.completedDate);
+
+// Combine main image with gallery images
+const allImages = [
+  ...(data.image ? [data.image] : []),
+  ...(data.images || []),
+];
+---
+
+<article class={cn('relative', className)}>
+  <!-- Hero Section -->
+  <section class="relative py-12 md:py-20 overflow-hidden">
+    {/* Background ambient glows */}
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div
+        class="absolute top-0 right-0 w-[600px] h-[600px]"
+        style="background: radial-gradient(circle at 70% 20%, rgba(16,185,129,0.12) 0%, transparent 60%);"
+      />
+      <div
+        class="absolute bottom-0 left-0 w-[500px] h-[500px]"
+        style="background: radial-gradient(circle at 20% 80%, rgba(16,185,129,0.08) 0%, transparent 65%);"
+      />
+    </div>
+
+    <Container>
+      {/* Back navigation */}
+      <div class="relative z-10 mb-8">
+        <a
+          href="/projects"
+          class={cn(
+            'inline-flex items-center gap-2',
+            'text-sm font-medium text-[var(--color-text-muted)]',
+            'hover:text-[var(--color-primary)] transition-colors duration-200'
+          )}
+        >
+          <Icon name="arrow-left" size="sm" />
+          Все проекты
+        </a>
+      </div>
+
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+        {/* Project Image */}
+        <div class="order-2 lg:order-1">
+          {allImages.length > 0 ? (
+            <div class="space-y-4">
+              {/* Main image */}
+              <Card padding="none" class="overflow-hidden group">
+                <div class="relative aspect-video">
+                  <img
+                    src={allImages[0]}
+                    alt={data.title}
+                    class={cn(
+                      'w-full h-full object-cover',
+                      'transition-transform duration-500',
+                      'group-hover:scale-105'
+                    )}
+                    loading="eager"
+                  />
+                  
+                  {/* Subtle gradient overlay */}
+                  <div 
+                    class="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-primary)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  />
+                </div>
+              </Card>
+              
+              {/* Gallery thumbnails */}
+              {allImages.length > 1 && (
+                <div class="grid grid-cols-4 gap-3">
+                  {allImages.slice(1, 5).map((image, index) => (
+                    <Card padding="none" class="overflow-hidden group/thumb cursor-pointer">
+                      <div class="relative aspect-video">
+                        <img
+                          src={image}
+                          alt={`${data.title} - изображение ${index + 2}`}
+                          class={cn(
+                            'w-full h-full object-cover',
+                            'transition-transform duration-300',
+                            'group-hover/thumb:scale-110'
+                          )}
+                          loading="lazy"
+                        />
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/thumb:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                          <Icon name="zoom-in" size="md" class="text-white" />
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                  {allImages.length > 5 && (
+                    <div class={cn(
+                      'aspect-video rounded-2xl',
+                      'bg-[var(--color-bg-glass)]',
+                      'border border-[var(--color-border-glass)]',
+                      'flex items-center justify-center',
+                      'cursor-pointer hover:bg-[var(--color-bg-glass-strong)]',
+                      'transition-colors duration-200'
+                    )}>
+                      <span class="text-sm font-medium text-[var(--color-text-muted)]">
+                        +{allImages.length - 5}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            /* Fallback when no images */
+            <Card padding="none" class="overflow-hidden">
+              <div class="relative aspect-video bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-bg-primary)]">
+                <div
+                  class="absolute inset-0 opacity-30"
+                  style="background-image: radial-gradient(circle at 2px 2px, var(--color-border-glass) 1px, transparent 1px); background-size: 32px 32px;"
+                />
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class={cn(
+                    'p-8 rounded-3xl',
+                    'bg-[var(--color-bg-glass)] backdrop-blur-sm',
+                    'border border-[var(--color-border-glass)]'
+                  )}>
+                    <Icon name="image" size="xl" class="text-[var(--color-text-muted)]" />
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+
+        {/* Project Info */}
+        <div class="order-1 lg:order-2">
+          {/* Status & Type badges */}
+          <div class="flex flex-wrap items-center gap-3 mb-6">
+            <div class={cn(
+              'inline-flex items-center gap-2 px-4 py-2',
+              'text-sm font-medium uppercase tracking-wider rounded-full',
+              'backdrop-blur-md border',
+              currentStatus.classes
+            )}>
+              <span>{currentStatus.label}</span>
+            </div>
+            <div class={cn(
+              'inline-flex items-center gap-2 px-4 py-2',
+              'text-sm font-medium rounded-full',
+              'bg-[var(--color-bg-glass)] backdrop-blur-md',
+              'border border-[var(--color-border-glass)]',
+              'text-[var(--color-text-body)]'
+            )}>
+              {projectType}
+            </div>
+            {data.featured && (
+              <div class={cn(
+                'inline-flex items-center gap-2 px-4 py-2',
+                'text-sm font-medium rounded-full',
+                'bg-[var(--color-primary)]/10 backdrop-blur-md',
+                'border border-[var(--color-primary)]/40',
+                'text-[var(--color-primary)]'
+              )}>
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                Featured
+              </div>
+            )}
+          </div>
+
+          {/* Title */}
+          <h1 class="heading-page mb-4">
+            {data.title}
+          </h1>
+
+          {/* Description */}
+          <p class="body-large text-[var(--color-text-body)] mb-8 leading-relaxed">
+            {data.description}
+          </p>
+
+          {/* Action buttons */}
+          <div class="flex flex-wrap gap-4 mb-10">
+            {data.demo && (
+              <Button
+                href={data.demo}
+                variant="primary"
+                size="lg"
+                external
+              >
+                <Icon name="external-link" size="sm" />
+                Открыть демо
+              </Button>
+            )}
+            {data.github && (
+              <Button
+                href={data.github}
+                variant="outline"
+                size="lg"
+                external
+              >
+                <Icon name="github" size="sm" />
+                GitHub
+              </Button>
+            )}
+            {data.links && data.links.length > 0 && (
+              data.links.map((link) => (
+                <Button
+                  href={link.url}
+                  variant="secondary"
+                  size="lg"
+                  external
+                >
+                  {link.icon && <Icon name={link.icon} size="sm" />}
+                  {link.label}
+                </Button>
+              ))
+            )}
+          </div>
+
+          {/* Project Meta Grid */}
+          <div class="grid grid-cols-2 gap-4">
+            {/* Date */}
+            {startDate && (
+              <Card padding="sm" class="flex items-center gap-3">
+                <div class={cn(
+                  'flex items-center justify-center w-10 h-10',
+                  'rounded-xl',
+                  'bg-[var(--color-primary)]/10',
+                  'text-[var(--color-primary)]'
+                )}>
+                  <Icon name="calendar" size="sm" />
+                </div>
+                <div>
+                  <p class="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">Дата</p>
+                  <p class="text-sm font-medium text-[var(--color-text-heading)]">{startDate}</p>
+                </div>
+              </Card>
+            )}
+
+            {/* Role */}
+            {data.role && (
+              <Card padding="sm" class="flex items-center gap-3">
+                <div class={cn(
+                  'flex items-center justify-center w-10 h-10',
+                  'rounded-xl',
+                  'bg-[var(--color-primary)]/10',
+                  'text-[var(--color-primary)]'
+                )}>
+                  <Icon name="user" size="sm" />
+                </div>
+                <div>
+                  <p class="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">Роль</p>
+                  <p class="text-sm font-medium text-[var(--color-text-heading)]">{data.role}</p>
+                </div>
+              </Card>
+            )}
+
+            {/* Team size */}
+            {data.teamSize && (
+              <Card padding="sm" class="flex items-center gap-3">
+                <div class={cn(
+                  'flex items-center justify-center w-10 h-10',
+                  'rounded-xl',
+                  'bg-[var(--color-primary)]/10',
+                  'text-[var(--color-primary)]'
+                )}>
+                  <Icon name="users" size="sm" />
+                </div>
+                <div>
+                  <p class="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">Команда</p>
+                  <p class="text-sm font-medium text-[var(--color-text-heading)]">{data.teamSize} чел.</p>
+                </div>
+              </Card>
+            )}
+
+            {/* Completed date */}
+            {completedDate && data.status === 'completed' && (
+              <Card padding="sm" class="flex items-center gap-3">
+                <div class={cn(
+                  'flex items-center justify-center w-10 h-10',
+                  'rounded-xl',
+                  'bg-emerald-500/10',
+                  'text-emerald-400'
+                )}>
+                  <Icon name="check" size="sm" />
+                </div>
+                <div>
+                  <p class="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">Завершён</p>
+                  <p class="text-sm font-medium text-[var(--color-text-heading)]">{completedDate}</p>
+                </div>
+              </Card>
+            )}
+          </div>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <!-- Technologies Section -->
+  {data.tags && data.tags.length > 0 && (
+    <section class="py-12 md:py-16 border-t border-[var(--color-border-glass)]">
+      <Container>
+        <h2 class="heading-section mb-8">
+          Технологии
+        </h2>
+        <div class="flex flex-wrap gap-3">
+          {data.tags.map((tag: string) => (
+            <Tag variant="default" size="lg">
+              {tag}
+            </Tag>
+          ))}
+        </div>
+      </Container>
+    </section>
+  )}
+
+  <!-- Highlights Section -->
+  {data.highlights && data.highlights.length > 0 && (
+    <section class="py-12 md:py-16 border-t border-[var(--color-border-glass)]">
+      <Container>
+        <h2 class="heading-section mb-8">
+          Ключевые достижения
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {data.highlights.map((highlight: string, index: number) => (
+            <Card padding="md" class="flex items-start gap-4">
+              <div class={cn(
+                'flex-shrink-0 flex items-center justify-center',
+                'w-8 h-8 rounded-lg',
+                'bg-[var(--color-primary)]/10',
+                'text-[var(--color-primary)]',
+                'text-sm font-bold'
+              )}>
+                {index + 1}
+              </div>
+              <p class="text-[var(--color-text-body)]">
+                {highlight}
+              </p>
+            </Card>
+          ))}
+        </div>
+      </Container>
+    </section>
+  )}
+
+  <!-- Bottom Navigation -->
+  <section class="py-12 md:py-16 border-t border-[var(--color-border-glass)]">
+    <Container>
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+        <Button
+          href="/projects"
+          variant="outline"
+          size="lg"
+        >
+          <Icon name="arrow-left" size="sm" />
+          Все проекты
+        </Button>
+        
+        <div class="flex items-center gap-4">
+          {data.github && (
+            <Button
+              href={data.github}
+              variant="ghost"
+              size="lg"
+              external
+              iconOnly
+            >
+              <Icon name="github" size="md" />
+            </Button>
+          )}
+          {data.demo && (
+            <Button
+              href={data.demo}
+              variant="primary"
+              size="lg"
+              external
+            >
+              Открыть проект
+              <Icon name="arrow-up-right" size="sm" />
+            </Button>
+          )}
+        </div>
+      </div>
+    </Container>
+  </section>
+</article>

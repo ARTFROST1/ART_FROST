@@ -85,7 +85,33 @@
   "effects": {
     "glass_blur": "backdrop-filter: blur(12px);",
     "glass_gradient": "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)",
-    "glow_shadow": "0 0 40px -10px rgba(16, 185, 129, 0.3)"
+    "glow_shadow": "0 0 40px -10px rgba(16, 185, 129, 0.3)",
+    "page_background": {
+      "ambient_glows": {
+        "primary": "radial-gradient(circle at 70% 20%, rgba(16,185,129,0.20) 0%, transparent 55%)",
+        "secondary": "radial-gradient(circle at 20% 80%, rgba(16,185,129,0.12) 0%, transparent 60%)"
+      },
+      "vignette": "radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.75) 100%)",
+      "grid": {
+        "size_px": 64,
+        "line_color": "rgba(255,255,255,0.06)",
+        "line_width_px": 1,
+        "mask": "radial-gradient(circle at 50% 30%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)"
+      },
+      "noise": {
+        "recommended_opacity": 0.04,
+        "note": "Use subtle film-grain/noise only if needed; keep extremely light for performance."
+      }
+    },
+    "panel": {
+      "inset_highlight": "inset 0 1px 0 rgba(255,255,255,0.06)",
+      "deep_shadow": "0 20px 60px -30px rgba(0,0,0,0.7)"
+    }
+  },
+  "radii": {
+    "card": 20,
+    "card_strong": 24,
+    "section_frame": 32
   },
   "typography": {
     "font_family_display": ["Inter", "sans-serif"],

@@ -1,0 +1,115 @@
+---
+/**
+ * Projects Index Page
+ * Displays all projects with filtering and SEO optimization
+ */
+import { getCollection } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import Section from '@components/common/Section.astro';
+import Container from '@components/common/Container.astro';
+import BreadcrumbJsonLd from '@components/seo/BreadcrumbJsonLd.astro';
+import { ProjectGrid } from '@components/projects';
+import { siteConfig } from '@data/site-config';
+
+// Get all projects from Content Collections
+const allProjects = await getCollection('projects');
+const projects = allProjects
+  .filter(project => !project.data.draft)
+  .sort((a, b) => {
+    // Featured projects first, then by order
+    if (a.data.featured && !b.data.featured) return -1;
+    if (!a.data.featured && b.data.featured) return 1;
+    return (a.data.order || 999) - (b.data.order || 999);
+  });
+
+// Page SEO
+const title = 'Проекты';
+const description = 'Полное портфолио проектов Art Frost: веб-разработка, приложения, инструменты и автоматизация. Каждый проект — от идеи до реализации.';
+
+// Breadcrumb items
+const breadcrumbItems = [
+  { name: 'Главная', url: '/' },
+  { name: 'Проекты', url: '/projects' },
+];
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  image="/assets/images/og/projects.png"
+>
+  <!-- JSON-LD Breadcrumbs -->
+  <BreadcrumbJsonLd slot="head" items={breadcrumbItems} />
+
+  <Section spacing="xl" class="relative overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+      <div
+        class="absolute top-0 right-0 w-[600px] h-[600px] opacity-100"
+        style="background: radial-gradient(circle at 70% 20%, rgba(16,185,129,0.15) 0%, transparent 60%);"
+      />
+      <div
+        class="absolute bottom-0 left-0 w-[500px] h-[500px] opacity-100"
+        style="background: radial-gradient(circle at 20% 80%, rgba(16,185,129,0.10) 0%, transparent 65%);"
+      />
+      <div
+        class="absolute inset-0"
+        style="background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 30%, rgba(0,0,0,0.3) 100%);"
+      />
+    </div>
+
+    <Container>
+      <!-- Header -->
+      <header class="relative z-10 text-center mb-12 md:mb-16">
+        <span class="inline-block text-[var(--color-primary)] text-sm font-medium uppercase tracking-widest mb-4">
+          Портфолио
+        </span>
+        <h1 class="heading-page mb-4">
+          Все{' '}
+          <span class="bg-gradient-to-r from-[var(--color-gradient-start)] to-[var(--color-gradient-end)] bg-clip-text text-transparent">
+            проекты
+          </span>
+        </h1>
+        <p class="body-large max-w-2xl mx-auto text-[var(--color-text-muted)]">
+          {projects.length} {projects.length === 1 ? 'проект' : projects.length < 5 ? 'проекта' : 'проектов'} — от веб-разработки до AI автоматизации
+        </p>
+      </header>
+
+      <!-- Projects Grid -->
+      <div class="relative z-10">
+        <ProjectGrid 
+          projects={projects} 
+          layout="bento"
+          showFeatured={true}
+        />
+                
+      </div>
+    </Container>
+  </Section>
+</PageLayout>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -100px 0px',
+    threshold: 0.1,
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-visible');
+      }
+    });
+  }, observerOptions);
+
+  // Observe all elements with .animate-on-scroll class
+  const initAnimations = () => {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach((el) => observer.observe(el));
+  };
+
+  document.addEventListener('DOMContentLoaded', initAnimations);
+  document.addEventListener('astro:page-load', initAnimations);
+</script>

@@ -1,43 +1,258 @@
-# Astro Starter Kit: Minimal
+# Art Frost Portfolio
 
-```sh
-npm create astro@latest -- --template minimal
+![Astro](https://img.shields.io/badge/Astro-5.x-ff5d01?style=flat&logo=astro)
+![React](https://img.shields.io/badge/React-19-61dafb?style=flat&logo=react)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-38bdf8?style=flat&logo=tailwindcss)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?style=flat&logo=typescript)
+
+Персональный сайт-портфолио на Astro 5 с тёмной темой, glassmorphism эффектами и SEO-оптимизацией.
+
+## 🚀 Быстрый старт
+
+```bash
+# Установка зависимостей
+npm install
+
+# Запуск dev-сервера
+npm run dev
+
+# Открыть http://localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 📁 Структура проекта
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
+```
+website/
 ├── public/
+│   └── assets/
+│       └── images/
+│           └── projects/        # Изображения проектов
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/              # UI компоненты
+│   ├── content/
+│   │   └── projects/            # JSON файлы проектов
+│   ├── data/                    # Статические данные
+│   ├── layouts/                 # Layouts
+│   ├── lib/                     # Утилиты
+│   ├── pages/                   # Роуты
+│   └── styles/                  # CSS
+└── scripts/
+    ├── create-project.mjs       # CLI для создания проектов
+    └── manage-projects.mjs      # CRUD система управления проектами
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🎨 Управление проектами (CRUD)
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### Главная команда: полное управление
 
-Any static assets, like images, can be placed in the `public/` directory.
+Интерактивная CRUD система с меню:
 
-## 🧞 Commands
+```bash
+npm run projects
+```
 
-All commands are run from the root of the project, from a terminal:
+Меню включает:
+1. **Create** — создать новый проект
+2. **Read** — просмотреть все проекты
+3. **Update** — редактировать существующий проект
+4. **Delete** — удалить проект
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+---
 
-## 👀 Want to learn more?
+### Create — Создание нового проекта
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+**Способ 1: Через CRUD меню**
+```bash
+npm run projects
+# Выбери опцию 1
+```
+
+**Способ 2: Быстрое создание**
+```bash
+npm run new:project
+```
+
+Скрипт:
+- Задаёт вопросы о проекте
+- Автоматически генерирует slug из названия (с транслитерацией)
+- Создаёт папку для изображений
+- Валидирует данные
+- Проверяет на дубликаты slug
+- Создаёт готовый JSON-файл
+
+**Способ 3: Копирование шаблона**
+
+1. Скопируй файл `src/content/projects/_template.json`
+2. Переименуй в `project-slug.json`
+3. Удали все поля с `_` (комментарии)
+4. Заполни данные
+
+**Способ 4: Создание вручную**
+
+Создай файл `src/content/projects/my-project.json`:
+
+```json
+{
+  "title": "Название проекта",
+  "description": "Полное описание проекта с **markdown** поддержкой.",
+  "shortDescription": "Краткое описание для карточки (макс 160 символов).",
+  "image": "/assets/images/projects/my-project.png",
+  "tags": ["React", "TypeScript", "Tailwind CSS"],
+  "github": "https://github.com/artfrost/my-project",
+  "demo": "https://my-project.vercel.app",
+  "featured": true,
+  "order": 1,
+  "date": "2024-01",
+  "status": "completed",
+  "type": "website",
+  "role": "Full-Stack Developer",
+  "highlights": [
+    "Lighthouse 95+",
+    "1000+ пользователей"
+  ],
+  "draft": false
+}
+```
+
+### Поля проекта
+
+| Поле | Тип | Обязательное | Описание |
+|------|-----|--------------|----------|
+| `title` | string | ✅ | Название проекта |
+| `description` | string | ✅ | Полное описание (markdown) |
+| `shortDescription` | string | - | Краткое описание (макс 160 символов) |
+| `image` | string | - | Путь к главному изображению |
+| `images` | string[] | - | Дополнительные скриншоты |
+| `tags` | string[] | - | Теги технологий |
+| `github` | string | - | URL GitHub репозитория |
+| `demo` | string | - | URL демо/продакшн |
+| `links` | object[] | - | Другие ссылки (статьи, App Store и т.д.) |
+| `featured` | boolean | - | Показать на главной (default: false) |
+| `order` | number | - | Порядок сортировки (меньше = выше) |
+| `date` | string | - | Дата старта (YYYY-MM) |
+| `completedDate` | string | - | Дата завершения (YYYY-MM) |
+| `status` | enum | - | completed / in-progress / planned / archived |
+| `type` | enum | - | website / app / library / tool / template / other |
+| `role` | string | - | Роль в проекте |
+| `teamSize` | number | - | Размер команды |
+| `highlights` | string[] | - | Ключевые достижения |
+| `seoTitle` | string | - | Кастомный SEO title |
+| `seoDescription` | string | - | Кастомный SEO description |
+| `ogImage` | string | - | Кастомное OG-изображение |
+| `draft` | boolean | - | Скрыть из списков (default: false) |
+
+### Read — Просмотр всех проектов
+
+```bash
+npm run projects
+# Выбери опцию 2
+```
+
+Показывает список всех проектов с:
+- Название и slug
+- Тип и статус (с цветовой индикацией)
+- Теги технологий
+- Featured статус и order
+- Ссылки (GitHub, Demo)
+
+### Update — Редактирование проекта
+
+```bash
+npm run projects
+# Выбери опцию 3
+```
+
+Процесс:
+1. Показывает список всех проектов
+2. Выбираешь номер проекта
+3. Редактируешь нужные поля (Enter = оставить как есть)
+4. Подтверждаешь изменения
+
+Можно изменить:
+- Название, описание
+- Тип, статус
+- Теги, ссылки
+- **Изображения (главное и дополнительные)**
+- Featured, order
+- Дату, роль, достижения
+
+**Редактирование изображений:**
+- Главное изображение: полный путь `/assets/images/projects/file.png`
+- Дополнительные: можно указать только имена файлов (автоматически добавится путь к папке проекта)
+- Пустой ввод = удалить дополнительные изображения
+
+### Delete — Удаление проекта
+
+```bash
+npm run projects
+# Выбери опцию 4
+```
+
+Процесс:
+1. Показывает список всех проектов
+2. Выбираешь номер проекта для удаления
+3. Подтверждаешь удаление (⚠️ нельзя отменить)
+4. Удаляет:
+   - JSON-файл проекта
+   - Папку с изображениями
+
+---
+
+### Изображения
+
+**Структура папок для каждого проекта:**
+
+```
+public/assets/images/projects/
+└── project-slug/               # Папка проекта (создаётся автоматически)
+    ├── project-slug.png        # Главное изображение
+    ├── screen1.png             # Дополнительные скриншоты
+    └── screen2.png
+```
+
+**Правила:**
+1. Каждый проект имеет свою папку: `public/assets/images/projects/project-slug/`
+2. Главное изображение: `/assets/images/projects/project-slug/project-slug.png`
+3. Рекомендуемый размер: 1200x630 или 16:9
+4. Форматы: PNG, WebP или JPG
+5. CLI автоматически создаёт папку при создании проекта
+
+**Где отображаются:**
+- Главная страница `/` — Featured проекты (только с `featured: true`)
+- Страница всех проектов `/projects` — все проекты (кроме `draft: true`)
+- Данные берутся **только из JSON-файлов**, никаких placeholder'ов
+
+## 🧞 Команды
+
+| Команда | Описание |
+|---------|----------|
+| `npm run dev` | Запуск dev-сервера на localhost:4321 |
+| `npm run build` | Сборка для продакшна |
+| `npm run preview` | Превью собранного сайта |
+| `npm run projects` | **CRUD система управления проектами** |
+| `npm run new:project` | Быстрое создание нового проекта |
+| `npm run lint` | Проверка ESLint |
+| `npm run lint:fix` | Исправить ESLint ошибки |
+| `npm run format` | Форматирование Prettier |
+| `npm run typecheck` | Проверка TypeScript |
+
+## 🔧 Технологии
+
+- **Framework**: [Astro 5](https://astro.build/) — Zero JS по умолчанию
+- **UI**: [React 19](https://react.dev/) — Islands Architecture
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) — Utility-first
+- **Language**: [TypeScript 5](https://www.typescriptlang.org/)
+- **Hosting**: [Vercel](https://vercel.com/)
+
+## 📝 Документация
+
+Подробная документация в папке `/Docs`:
+
+- [PRD](../Docs/PRD-ArtFrost-Portfolio.md) — Product Requirements
+- [TechStack](../Docs/TechStack.md) — Технологический стек
+- [UI/UX](../Docs/UI_UX.md) — Дизайн система
+- [ProjectStructure](../Docs/ProjectStructure.md) — Структура проекта
+
+## 📄 Лицензия
+
+MIT © Art Frost

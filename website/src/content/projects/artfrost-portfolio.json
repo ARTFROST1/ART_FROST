@@ -1,0 +1,39 @@
+{
+  "title": "Art Frost Portfolio",
+  "description": "Персональный сайт-портфолио на Astro 5 с тёмной темой, glassmorphism эффектами и SEO-оптимизацией. Islands Architecture для минимального JavaScript. Статическая генерация страниц, автоматические sitemap и JSON-LD schema для улучшенной индексации. Адаптивный дизайн mobile-first с поддержкой светлой и тёмной темы.",
+  "shortDescription": "Персональный сайт-портфолио на Astro 5 с glassmorphism и SEO.",
+  "image": "/assets/images/projects/artfrost-portfolio/artfrost-portfolio.png",
+  "images": [
+    "/assets/images/projects/artfrost-portfolio/home.png",
+    "/assets/images/projects/artfrost-portfolio/projects.png",
+    "/assets/images/projects/artfrost-portfolio/about.png",
+    "/assets/images/projects/artfrost-portfolio/mobile.png"
+  ],
+  "tags": [
+    "Astro",
+    "TypeScript",
+    "Tailwind CSS",
+    "React",
+    "SEO",
+    "Vercel",
+    "Glassmorphism"
+  ],
+  "github": "https://github.com/artfrost/portfolio",
+  "demo": "https://artfrost.vercel.app",
+  "featured": true,
+  "order": 1,
+  "date": "2026-01",
+  "status": "in-progress",
+  "type": "website",
+  "role": "Full-Stack Developer",
+  "teamSize": 1,
+  "highlights": [
+    "Lighthouse Score 95+",
+    "Zero JS по умолчанию (Islands)",
+    "Dark/Light тема с плавным переключением",
+    "Glassmorphism UI дизайн",
+    "SEO: JSON-LD, sitemap, meta tags",
+    "Mobile-first адаптивность"
+  ],
+  "draft": false
+}

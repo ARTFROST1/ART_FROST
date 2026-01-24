@@ -12,7 +12,9 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{astro,js,jsx,ts,tsx,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{astro,js,jsx,ts,tsx,json,css,md}\"",
-    "typecheck": "astro check"
+    "typecheck": "astro check",
+    "new:project": "node scripts/create-project.mjs",
+    "projects": "node scripts/manage-projects.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",

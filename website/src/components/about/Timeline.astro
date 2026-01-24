@@ -1,0 +1,274 @@
+---
+/**
+ * Timeline Component
+ * Vertical timeline with experience entries and year markers
+ * Features: Animated entries, type badges, skill tags, glassmorphism styling
+ *
+ * @example
+ * <Timeline />
+ * <Timeline showSkills={true} limit={5} />
+ */
+
+import { cn } from '@lib/utils';
+import Card from '@components/common/Card.astro';
+import Tag from '@components/common/Tag.astro';
+import { 
+  getExperienceTimeline, 
+  experienceTypeLabels,
+  type ExperienceType 
+} from '@data/experience';
+
+interface Props {
+  /** Show skill tags on entries */
+  showSkills?: boolean;
+  /** Limit number of entries */
+  limit?: number;
+  /** Filter by experience type */
+  type?: ExperienceType;
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const {
+  showSkills = true,
+  limit,
+  type,
+  class: className,
+} = Astro.props;
+
+// Experience type styling
+const typeStyles: Record<ExperienceType, { bg: string; text: string; border: string }> = {
+  work: { 
+    bg: 'bg-emerald-500/10', 
+    text: 'text-emerald-400', 
+    border: 'border-emerald-500/30' 
+  },
+  education: { 
+    bg: 'bg-blue-500/10', 
+    text: 'text-blue-400', 
+    border: 'border-blue-500/30' 
+  },
+  milestone: { 
+    bg: 'bg-amber-500/10', 
+    text: 'text-amber-400', 
+    border: 'border-amber-500/30' 
+  },
+  project: { 
+    bg: 'bg-purple-500/10', 
+    text: 'text-purple-400', 
+    border: 'border-purple-500/30' 
+  },
+  achievement: { 
+    bg: 'bg-pink-500/10', 
+    text: 'text-pink-400', 
+    border: 'border-pink-500/30' 
+  },
+};
+
+// Timeline icons mapping
+const timelineIcons: Record<string, string> = {
+  rocket: 'M9.315 7.584C12.195 3.883 16.695 1.5 21.75 1.5a.75.75 0 01.75.75c0 5.056-2.383 9.555-6.084 12.436A6.75 6.75 0 019.75 22.5a.75.75 0 01-.75-.75v-4.131A15.838 15.838 0 016.382 15H2.25a.75.75 0 01-.75-.75 6.75 6.75 0 017.815-6.666zM15 6.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z',
+  'message-circle': 'M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z',
+  layers: 'M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3',
+  code: 'M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5',
+  zap: 'M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z',
+  play: 'M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z',
+};
+
+// Get and filter timeline entries
+let entries = getExperienceTimeline();
+
+if (type) {
+  entries = entries.filter((entry) => entry.type === type);
+}
+
+if (limit) {
+  entries = entries.slice(0, limit);
+}
+---
+
+<section class={cn('relative', className)}>
+  <!-- Section Header -->
+  <div class="text-center mb-12 animate-on-scroll">
+    <h2 class="heading-section mb-4">
+      <span class="bg-gradient-to-r from-white via-white/80 to-white/40 bg-clip-text text-transparent">
+        Опыт и путь
+      </span>
+    </h2>
+    <p class="body-large text-[var(--color-text-muted)] max-w-2xl mx-auto">
+      Ключевые этапы профессионального развития
+    </p>
+  </div>
+
+  <!-- Timeline Container -->
+  <div class="relative">
+    <!-- Vertical Line (hidden on mobile) -->
+    <div
+      class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--color-primary)]/30 via-[var(--color-border-glass)] to-transparent -translate-x-1/2"
+      aria-hidden="true"
+    />
+
+    <!-- Timeline Entries -->
+    <div class="space-y-8 md:space-y-12">
+      {entries.map((entry, index) => {
+        const isLeft = index % 2 === 0;
+        const style = typeStyles[entry.type];
+        const iconPath = timelineIcons[entry.icon || 'zap'];
+        
+        return (
+          <div
+            class={cn(
+              'group relative flex flex-col md:flex-row items-stretch md:items-center gap-6',
+              isLeft ? 'md:flex-row' : 'md:flex-row-reverse',
+              'animate-on-scroll'
+            )}
+            style={`transition-delay: ${200 + index * 100}ms;`}
+          >
+            {/* Content Card */}
+            <div class={cn('flex-1 w-full md:w-auto', isLeft ? 'md:text-right' : 'md:text-left')}>
+              <Card
+                hover
+                gradient
+                padding="lg"
+                class="relative overflow-hidden group"
+              >
+                {/* Glow effect on hover */}
+                <div
+                  class={cn(
+                    'absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500',
+                    'bg-gradient-to-r from-transparent via-[var(--color-primary)]/10 to-transparent'
+                  )}
+                  aria-hidden="true"
+                />
+
+                <div class="relative z-10">
+                  {/* Header: Year + Type Badge */}
+                  <div class={cn(
+                    'flex items-center gap-3 mb-3',
+                    isLeft ? 'md:flex-row-reverse md:justify-start' : 'flex-row justify-start'
+                  )}>
+                    {/* Year */}
+                    <span class="text-sm font-mono text-[var(--color-primary)]">
+                      {entry.year}
+                    </span>
+                    
+                    {/* Type Badge */}
+                    <span
+                      class={cn(
+                        'inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border',
+                        style.bg,
+                        style.text,
+                        style.border
+                      )}
+                    >
+                      {experienceTypeLabels[entry.type]}
+                    </span>
+
+                    {/* Current indicator */}
+                    {entry.isCurrent && (
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        Сейчас
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Title */}
+                  <h3 class="text-lg md:text-xl font-semibold text-[var(--color-text-heading)] mb-2">
+                    {entry.title}
+                  </h3>
+
+                  {/* Company (if exists) */}
+                  {entry.company && (
+                    <p class="text-sm text-[var(--color-primary)] mb-2">
+                      {entry.company}
+                    </p>
+                  )}
+
+                  {/* Description */}
+                  <p class="text-[var(--color-text-body)] mb-4 leading-relaxed">
+                    {entry.description}
+                  </p>
+
+                  {/* Skills Tags */}
+                  {showSkills && entry.skills && entry.skills.length > 0 && (
+                    <div class={cn(
+                      'flex flex-wrap gap-2',
+                      isLeft ? 'md:justify-end' : 'justify-start'
+                    )}>
+                      {entry.skills.map((skill) => (
+                        <Tag variant="outline" size="sm">
+                          {skill}
+                        </Tag>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Link (if exists) */}
+                  {entry.link && (
+                    <a
+                      href={entry.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class={cn(
+                        'inline-flex items-center gap-1 mt-4 text-sm text-[var(--color-primary)]',
+                        'hover:underline transition-colors'
+                      )}
+                    >
+                      Подробнее
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17L17 7M17 7H7M17 7V17" />
+                      </svg>
+                    </a>
+                  )}
+                </div>
+              </Card>
+            </div>
+
+            {/* Center Node (Desktop only) */}
+            <div
+              class="hidden md:flex items-center justify-center w-16 h-16 z-10"
+            >
+              <div
+                class={cn(
+                  'w-12 h-12 rounded-full flex items-center justify-center',
+                  'bg-[var(--color-bg-secondary)] border-2 border-[var(--color-border-glass-strong)]',
+                  'shadow-[0_0_20px_-5px_var(--color-primary-glow)]',
+                  'group-hover:border-[var(--color-primary)]/50 transition-colors duration-300'
+                )}
+              >
+                <svg
+                  class="w-5 h-5 text-[var(--color-primary)]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d={iconPath} />
+                </svg>
+              </div>
+            </div>
+
+            {/* Spacer for alternating layout */}
+            <div class="hidden md:block flex-1" />
+          </div>
+        );
+      })}
+    </div>
+
+    {/* End Node */}
+    <div class="hidden md:flex justify-center mt-12">
+      <div
+        class={cn(
+          'w-8 h-8 rounded-full flex items-center justify-center',
+          'bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)]',
+          'animate-pulse'
+        )}
+      >
+        <div class="w-3 h-3 rounded-full bg-[var(--color-primary)]/50" />
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,38 @@
+{
+  "title": "Mobile Fitness App",
+  "description": "Кросс-платформенное мобильное приложение для фитнеса с персонализированными тренировками, трекингом прогресса и социальными функциями. Разработано на React Native с Expo, использует машинное обучение для рекомендаций упражнений на основе данных пользователя.",
+  "shortDescription": "Фитнес-приложение с AI-рекомендациями и социальными функциями.",
+  "image": "/assets/images/projects/fitness-app/preview.png",
+  "images": [
+    "/assets/images/projects/fitness-app/home.png",
+    "/assets/images/projects/fitness-app/workout.png",
+    "/assets/images/projects/fitness-app/progress.png",
+    "/assets/images/projects/fitness-app/social.png"
+  ],
+  "tags": [
+    "React Native",
+    "Expo",
+    "TypeScript",
+    "Firebase",
+    "TensorFlow Lite",
+    "Redux Toolkit"
+  ],
+  "github": "https://github.com/artfrost/fitness-mobile-app",
+  "demo": "https://apps.apple.com/app/fitness-ai",
+  "featured": false,
+  "order": 4,
+  "date": "2025-05",
+  "completedDate": "2025-09",
+  "status": "completed",
+  "type": "app",
+  "role": "Mobile Developer",
+  "teamSize": 3,
+  "highlights": [
+    "50K+ загрузок в App Store",
+    "4.8★ средний рейтинг",
+    "AI-генерация тренировок",
+    "Синхронизация с Apple Health",
+    "Оффлайн-режим"
+  ],
+  "draft": false
+}

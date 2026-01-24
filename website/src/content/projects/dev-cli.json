@@ -1,0 +1,34 @@
+{
+  "title": "Developer Tools CLI",
+  "description": "Набор CLI-утилит для автоматизации рутинных задач разработчика: scaffolding проектов, генерация компонентов, управление зависимостями, деплой. Написан на Go для максимальной производительности, поддерживает плагины.",
+  "shortDescription": "CLI-инструменты на Go для автоматизации разработки.",
+  "image": "/assets/images/projects/dev-cli/preview.png",
+  "images": [
+    "/assets/images/projects/dev-cli/terminal.png",
+    "/assets/images/projects/dev-cli/config.png"
+  ],
+  "tags": [
+    "Go",
+    "CLI",
+    "Cobra",
+    "GitHub Actions",
+    "Docker"
+  ],
+  "github": "https://github.com/artfrost/dev-cli",
+  "featured": false,
+  "order": 5,
+  "date": "2025-03",
+  "completedDate": "2025-06",
+  "status": "completed",
+  "type": "tool",
+  "role": "Solo Developer",
+  "teamSize": 1,
+  "highlights": [
+    "500+ звезд на GitHub",
+    "Используется в 20+ компаниях",
+    "Плагин-архитектура",
+    "Кросс-платформенность",
+    "Homebrew & apt packages"
+  ],
+  "draft": false
+}

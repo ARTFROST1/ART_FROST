@@ -1,0 +1,213 @@
+---
+/**
+ * About Page - Art Frost Portfolio
+ * Информация о себе, навыки, опыт и путь в IT
+ *
+ * SEO:
+ * - PersonJsonLd schema для Rich Results
+ * - BreadcrumbJsonLd для навигационных цепочек
+ * - OG-теги для соцсетей
+ */
+import PageLayout from '@layouts/PageLayout.astro';
+import Section from '@components/common/Section.astro';
+import PersonJsonLd from '@components/seo/PersonJsonLd.astro';
+import BreadcrumbJsonLd from '@components/seo/BreadcrumbJsonLd.astro';
+import { AboutHero, SkillsList, Timeline } from '@components/about';
+import { profile } from '@data/profile';
+import { getAllSkills } from '@data/skills';
+import { socialLinks } from '@data/social-links';
+
+// SEO meta
+const title = 'Обо мне';
+const description = `${profile.name} — ${profile.title}. ${profile.shortBio} Узнайте больше о моём опыте, навыках и пути в IT.`;
+
+// Breadcrumb navigation
+const breadcrumbs = [
+  { name: 'Главная', url: '/' },
+  { name: 'Обо мне', url: '/about' },
+];
+
+// Social links for PersonJsonLd (sameAs)
+const sameAsLinks = socialLinks
+  .filter((link) => link.isPrimary)
+  .map((link) => link.url);
+
+// Top skills for knowsAbout
+const knowsAboutSkills = getAllSkills()
+  .filter((skill) => skill.level === 'expert' || skill.level === 'advanced')
+  .slice(0, 10)
+  .map((skill) => skill.name);
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  type="website"
+>
+  <!-- JSON-LD Schema for SEO -->
+  <PersonJsonLd
+    slot="head"
+    name={profile.name}
+    alternateName="artfrost"
+    jobTitle={profile.title}
+    description={profile.shortBio}
+    image={profile.avatar}
+    email={profile.email}
+    sameAs={sameAsLinks}
+    knowsAbout={knowsAboutSkills}
+  />
+  <BreadcrumbJsonLd slot="head" items={breadcrumbs} />
+
+  <div class="page-bg">
+    <!-- About Hero Section -->
+    <AboutHero class="relative z-10" />
+
+    <!-- Skills Section -->
+    <Section
+      id="skills"
+      spacing="lg"
+      background="none"
+      containerSize="xl"
+      class="relative z-10"
+    >
+      <div class="section-frame p-6 md:p-10">
+        <SkillsList showLevels={false} activeOnly={true} />
+      </div>
+    </Section>
+
+    <!-- Timeline / Experience Section -->
+    <Section
+      id="experience"
+      spacing="lg"
+      background="none"
+      containerSize="xl"
+      class="relative z-10"
+    >
+      <div class="section-frame p-6 md:p-10">
+        <Timeline showSkills={true} limit={4} />
+      </div>
+    </Section>
+
+    <!-- Call to Action Section -->
+    <Section
+      id="contact"
+      spacing="lg"
+      background="none"
+      containerSize="lg"
+      class="relative overflow-hidden z-10"
+    >
+      <div class="section-frame p-6 md:p-10">
+    <!-- Background glow -->
+    <div
+      class="absolute inset-0 pointer-events-none"
+      aria-hidden="true"
+    >
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10"
+        style="background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);"
+      />
+    </div>
+
+      <!-- CTA Content -->
+      <div class="relative text-center max-w-2xl mx-auto">
+      <h2 class="heading-section mb-4">
+        <span class="bg-gradient-to-r from-white via-white/80 to-white/40 bg-clip-text text-transparent">
+          Давайте создадим что-то вместе
+        </span>
+      </h2>
+      <p class="body-large text-[var(--color-text-muted)] mb-8">
+        Открыт для интересных проектов, сотрудничества и новых идей.
+      </p>
+      
+      <!-- Social Links Grid (6 buttons with colored glow) -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        {socialLinks
+          .filter((link) => link.isPrimary)
+          .sort((a, b) => a.order - b.order)
+          .map((link) => {
+            // White glow for black logos
+            const glowColor = (link.color === '#000000' || link.color === '#181717') ? '#ffffff' : link.color;
+            return (
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex flex-col items-center justify-center gap-2 px-4 py-5 rounded-xl
+                       bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)]
+                       hover:border-[var(--link-color)]/50 hover:bg-[var(--color-bg-glass-strong)]
+                       hover:scale-105 transition-all duration-300 group relative"
+                style={`--link-color: ${glowColor};`}
+                aria-label={link.label}
+              >
+                <!-- Colored glow effect on hover -->
+                <div
+                  class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={`background: radial-gradient(circle at center, ${glowColor}20 0%, transparent 70%); box-shadow: 0 0 40px -10px ${glowColor}80;`}
+                  aria-hidden="true"
+                />
+                
+                <svg 
+                  class="w-8 h-8 text-[var(--color-primary)] group-hover:text-[var(--link-color)] group-hover:scale-110 transition-all duration-300 relative z-10" 
+                  viewBox="0 0 24 24" 
+                  fill="currentColor"
+                >
+                  {link.id === 'telegram' && (
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" />
+                  )}
+                  {link.id === 'github' && (
+                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+                  )}
+                  {link.id === 'youtube' && (
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  )}
+                  {link.id === 'twitter' && (
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  )}
+                  {link.id === 'linkedin' && (
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  )}
+                  {link.id === 'instagram' && (
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                  )}
+                  {link.id === 'reddit' && (
+                    <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+                  )}
+                </svg>
+                <span class="text-sm font-medium text-[var(--color-text-body)] group-hover:text-[var(--link-color)] transition-colors duration-300 relative z-10">
+                  {link.name}
+                </span>
+              </a>
+            );
+          })}
+      </div>
+      </div>
+      </div>
+    </Section>
+  </div>
+</PageLayout>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -100px 0px',
+    threshold: 0.1,
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-visible');
+      }
+    });
+  }, observerOptions);
+
+  // Initialize observer
+  function initScrollAnimations() {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach((el) => observer.observe(el));
+  }
+
+  document.addEventListener('DOMContentLoaded', initScrollAnimations);
+  document.addEventListener('astro:page-load', initScrollAnimations);
+</script>

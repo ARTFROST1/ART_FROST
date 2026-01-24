@@ -1,0 +1,38 @@
+{
+  "title": "AI-Powered Telegram Bot",
+  "description": "Умный Telegram-бот с интеграцией OpenAI GPT-4 для автоматизации ответов на вопросы пользователей. Бот обрабатывает естественный язык, поддерживает контекст диалога и может работать с документами. Использует современные практики разработки: TypeScript, чистая архитектура, unit-тесты.",
+  "shortDescription": "Telegram-бот с GPT-4 для автоматизации поддержки и ответов на вопросы.",
+  "image": "/assets/images/projects/ai-telegram-bot/preview.png",
+  "images": [
+    "/assets/images/projects/ai-telegram-bot/chat.png",
+    "/assets/images/projects/ai-telegram-bot/admin.png",
+    "/assets/images/projects/ai-telegram-bot/analytics.png"
+  ],
+  "tags": [
+    "TypeScript",
+    "Node.js",
+    "OpenAI",
+    "Telegram Bot API",
+    "PostgreSQL",
+    "Redis",
+    "Docker"
+  ],
+  "github": "https://github.com/artfrost/ai-telegram-bot",
+  "demo": "https://t.me/artfrost_ai_bot",
+  "featured": true,
+  "order": 2,
+  "date": "2025-11",
+  "completedDate": "2026-01",
+  "status": "completed",
+  "type": "tool",
+  "role": "Full-Stack Developer",
+  "teamSize": 1,
+  "highlights": [
+    "Обработка 1000+ запросов в день",
+    "Время ответа < 2 секунды",
+    "99.9% uptime за 3 месяца",
+    "Интеграция с базой знаний",
+    "Мультиязычная поддержка"
+  ],
+  "draft": false
+}

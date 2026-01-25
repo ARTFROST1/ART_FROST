@@ -1,0 +1,150 @@
+---
+/**
+ * LinksLayout - Minimal layout for Links page (Linktree-style)
+ * Features: centered content, minimal header/footer, ambient glow, mobile-first
+ */
+
+import { themeScript } from '@lib/theme/theme-script';
+import SkipLink from '@components/common/SkipLink.astro';
+import { ThemeToggle } from '@components/layout/ThemeToggle';
+import Icon from '@components/common/Icon.astro';
+import '@styles/fonts.css';
+import '@styles/global.css';
+
+interface Props {
+  /** Page title for SEO */
+  title?: string;
+  /** Page description */
+  description?: string;
+}
+
+// Canonical URL
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="ru" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Theme initialization (FOUC prevention) -->
+    <script is:inline set:html={themeScript} />
+
+    <!-- Preload critical fonts -->
+    <link
+      rel="preload"
+      href="/fonts/inter-var-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-regular-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalUrl.href} />
+
+    <meta name="theme-color" content="#050605" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F7F9F8" media="(prefers-color-scheme: light)" />
+
+    <!-- SEO slot -->
+    <slot name="head" />
+  </head>
+
+  <body
+    class="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-body)] antialiased transition-colors duration-300 overflow-x-hidden"
+  >
+    <SkipLink target="main-content" />
+
+    <!-- Ambient background effects -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10" aria-hidden="true">
+      <!-- Primary glow (top-right) -->
+      <div
+        class="absolute -top-[30%] -right-[20%] w-[70%] h-[70%] rounded-full opacity-20"
+        style="background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);"
+      >
+      </div>
+      
+      <!-- Abstract blurred rays/shapes (User request) -->
+      <div 
+        class="absolute top-[15%] left-[5%] w-[180px] h-[400px] rotate-[35deg] opacity-15 mix-blend-screen [html[data-theme='light']_&]:opacity-10 [html[data-theme='light']_&]:mix-blend-normal"
+        style="background: radial-gradient(ellipse at center, var(--color-primary) 0%, transparent 72%); filter: blur(84px);"
+      ></div>
+      <div 
+        class="absolute top-[55%] right-[0%] w-[220px] h-[350px] -rotate-[20deg] opacity-10 mix-blend-screen [html[data-theme='light']_&]:opacity-8 [html[data-theme='light']_&]:mix-blend-normal"
+        style="background: radial-gradient(ellipse at center, var(--color-primary-glow) 0%, transparent 74%); filter: blur(92px);"
+      ></div>
+
+      <!-- Secondary glow (bottom-left) -->
+      <div
+        class="absolute -bottom-[30%] -left-[20%] w-[60%] h-[60%] rounded-full opacity-15"
+        style="background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);"
+      >
+      </div>
+      <!-- Vignette -->
+      <div
+        class="absolute inset-0"
+        style="background: radial-gradient(circle at 50% 50%, transparent 30%, rgba(0,0,0,0.6) 100%);"
+      >
+      </div>
+    </div>
+
+    <!-- Minimal header -->
+    <header class="fixed top-0 left-0 right-0 z-50">
+      <div class="flex items-center justify-between px-5 py-4 max-w-lg mx-auto">
+        <!-- Logo/Home link -->
+        <a
+          href="/"
+          class="flex items-center gap-2 text-[var(--color-text-heading)] hover:text-[var(--color-primary)] transition-colors duration-200"
+          aria-label="На главную"
+        >
+          <div
+            class="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-gradient-start)] to-[var(--color-gradient-end)] flex items-center justify-center"
+          >
+            <span class="text-white font-bold text-sm">AF</span>
+          </div>
+        </a>
+
+        <!-- Theme toggle -->
+        <ThemeToggle client:load />
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main
+      id="main-content"
+      class="relative flex flex-col min-h-screen pt-20 pb-24 px-5"
+      tabindex="-1"
+    >
+      <div class="w-full max-w-lg mx-auto flex-1 flex flex-col">
+        <slot />
+      </div>
+    </main>
+
+    <!-- Minimal footer -->
+    <footer
+      class="fixed bottom-0 left-0 right-0 pb-5 pt-8 bg-gradient-to-t from-[var(--color-bg-primary)] to-transparent"
+    >
+      <div class="max-w-lg mx-auto px-5 text-center">
+        <a
+          href="/"
+          class="inline-flex items-center gap-2 text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-body)] transition-colors duration-200"
+        >
+          <span>artfrost.dev</span>
+          <Icon name="arrow-up-right" size="xs" />
+        </a>
+      </div>
+    </footer>
+  </body>
+</html>

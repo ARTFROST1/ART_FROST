@@ -1,0 +1,129 @@
+---
+/**
+ * Links Page - Linktree-style page with all social links
+ * Mobile-first, minimal design, optimized for social sharing
+ */
+
+import LinksLayout from '@layouts/LinksLayout.astro';
+import { SEOHead, PersonJsonLd } from '@components/seo';
+import { LinksList } from '@components/links';
+import { getAllSocialLinks } from '@data/social-links';
+import { profile } from '@data/profile';
+
+// Get all social links sorted by order
+const socialLinks = getAllSocialLinks();
+
+// Page metadata
+const pageTitle = 'Links';
+const pageDescription = `Все ссылки ${profile.name} в одном месте. Telegram, YouTube, Instagram, GitHub и другие социальные сети.`;
+---
+
+<LinksLayout>
+  <!-- SEO Head -->
+  <SEOHead
+    slot="head"
+    title={pageTitle}
+    description={pageDescription}
+    image="/assets/images/og/links.png"
+    type="profile"
+  />
+
+  <!-- Person JSON-LD for rich results -->
+  <PersonJsonLd
+    slot="head"
+    name={profile.name}
+    alternateName="artfrost"
+    description={profile.shortBio}
+    url="https://artfrost.vercel.app"
+    image={profile.avatar}
+    jobTitle={profile.title}
+    sameAs={socialLinks.map((link) => link.url)}
+  />
+
+  <!-- Profile Header -->
+  <header class="text-center mb-8 mt-4 animate-fade-in">
+    <!-- Avatar with glow effect -->
+    <div class="relative inline-block mb-5">
+      <!-- Glow ring -->
+      <div
+        class="absolute inset-0 rounded-full blur-xl opacity-50"
+        style="background: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-end));"
+      >
+      </div>
+      <!-- Avatar container -->
+      <div
+        class="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[var(--color-border-glass-strong)] bg-[var(--color-bg-glass)]"
+      >
+        <img
+          src={profile.avatar}
+          alt={profile.name}
+          class="w-full h-full object-cover"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+      <!-- Status indicator -->
+      {
+        profile.status === 'available' && (
+          <div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[var(--color-bg-secondary)] flex items-center justify-center border-2 border-[var(--color-bg-primary)]">
+            <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
+          </div>
+        )
+      }
+    </div>
+
+    <!-- Name -->
+    <h1
+      class="text-xl font-bold text-[var(--color-text-heading)] mb-1.5 tracking-tight"
+    >
+      {profile.name}
+    </h1>
+
+    <!-- Tagline -->
+    <p class="text-sm text-[var(--color-text-body)] mb-3 max-w-xs mx-auto">
+      {profile.tagline}
+    </p>
+
+    <!-- Status badge -->
+    {
+      profile.statusMessage && (
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] backdrop-blur-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span class="text-xs text-[var(--color-text-muted)]">
+            {profile.statusMessage}
+          </span>
+        </div>
+      )
+    }
+  </header>
+
+  <!-- Links Section -->
+  <section class="flex-1">
+    <LinksList links={socialLinks} showDescriptions={true} />
+  </section>
+
+  <!-- Bottom decoration -->
+  <div class="mt-8 text-center animate-fade-in" style="animation-delay: 600ms;">
+    <p class="text-xs text-[var(--color-text-muted)]">
+      © {new Date().getFullYear()} {profile.name}
+    </p>
+  </div>
+</LinksLayout>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out;
+    animation-fill-mode: both;
+  }
+</style>

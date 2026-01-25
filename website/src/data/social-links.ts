@@ -67,6 +67,7 @@ export const socialLinks: SocialLinkConfig[] = [
     username: '@artfrost',
     description: 'Личное, закулисье, моменты жизни.',
     color: '#E4405F',
+    isPrimary: true,
     order: 3,
   },
   {
@@ -90,6 +91,7 @@ export const socialLinks: SocialLinkConfig[] = [
     username: '@artfrost',
     description: 'Короткие мысли, новости, общение.',
     color: '#000000',
+    isPrimary: true,
     order: 5,
   },
   {
@@ -102,6 +104,18 @@ export const socialLinks: SocialLinkConfig[] = [
     description: 'Профессиональная сеть, карьера.',
     color: '#0A66C2',
     order: 6,
+  },
+  {
+    id: 'reddit',
+    name: 'Reddit',
+    label: 'Reddit профиль Art Frost',
+    url: 'https://reddit.com/u/artfrost',
+    icon: 'reddit',
+    username: 'u/artfrost',
+    description: 'Обсуждения, комьюнити, AMA.',
+    color: '#FF4500',
+    isPrimary: true,
+    order: 7,
   },
 ];
 

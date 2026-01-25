@@ -106,7 +106,7 @@ export const siteConfig: SiteConfig = {
     },
   ],
   locale: 'ru_RU',
-  themeColor: '#10B981', // Primary color from design system
+  themeColor: '#34b863', // Primary color from design system
   defaultOgImage: '/og-image.png',
   twitterHandle: '@artfrost',
 };

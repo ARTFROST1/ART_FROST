@@ -478,15 +478,15 @@
 **Время:** 4-5 часов  
 **Зависимости:** 2.7, 2.8
 
-- [ ] Создать `ProjectCard.astro`:
+- [x] Создать `ProjectCard.astro`:
   - Glass card с image, tags, title, description
   - Hover effect: lift + glow + image scale
   - Link на детальную страницу
-- [ ] Создать `ProjectGrid.astro`:
+- [x] Создать `ProjectGrid.astro`:
   - Bento grid layout
   - Responsive columns (1 → 2 → 3-4)
   - Featured project large card
-- [ ] Создать `ProjectDetail.astro`:
+- [x] Создать `ProjectDetail.astro`:
   - Full project information
   - Image gallery
   - Technologies tags
@@ -499,13 +499,13 @@
 **Время:** 3-4 часа  
 **Зависимости:** 2.11, 2.16, 2.10
 
-- [ ] Создать `projects/index.astro`:
+- [x] Создать `projects/index.astro`:
   - PageLayout с SEO props
   - Page header (title, description)
   - BreadcrumbJsonLd
   - ProjectGrid с всеми проектами
   - Static paths generation
-- [ ] Создать `projects/[slug].astro`:
+- [x] Создать `projects/[slug].astro`:
   - getStaticPaths для всех проектов
   - PageLayout с dynamic SEO
   - CreativeWorkJsonLd schema
@@ -519,12 +519,14 @@
 **Время:** 2-3 часа  
 **Зависимости:** 2.10
 
-- [ ] Создать 4-6 sample project JSON files:
-  - `ai-chatbot.json`
-  - `portfolio-site.json`
-  - `mobile-app.json`
-  - `telegram-bot.json`
-- [ ] Каждый файл содержит: title, description, shortDescription, image, tags, github, demo, featured, order, date
+- [x] Создать 4-6 sample project JSON files (фактически добавлено):
+  - `ai-telegram-bot.json`
+  - `artfrost-portfolio.json`
+  - `dev-cli.json`
+  - `ecommerce-dashboard.json`
+  - `fitness-mobile-app.json`
+  - `n8n-workflows.json`
+- [x] Каждый файл содержит: title, description, shortDescription, image, tags, github, demo, featured, order, date
 - [ ] Создать placeholder images в `public/assets/images/projects/`
 
 ### 2.19 Links Page Components
@@ -533,12 +535,12 @@
 **Время:** 2-3 часа  
 **Зависимости:** 2.7
 
-- [ ] Создать `LinkCard.astro`:
+- [x] Создать `LinkCard.astro`:
   - Vertical button-style card
   - Icon + title
   - Hover glow effect
   - External link с noopener noreferrer
-- [ ] Создать `LinksList.astro`:
+- [x] Создать `LinksList.astro`:
   - Vertical stack LinkCard компонентов
   - Centered layout
 
@@ -548,12 +550,12 @@
 **Время:** 2-3 часа  
 **Зависимости:** 2.19
 
-- [ ] Создать `LinksLayout.astro`:
+- [x] Создать `LinksLayout.astro`:
   - Minimal header (logo only)
   - Centered content area
   - Minimal footer
   - Mobile-first design
-- [ ] Создать `links.astro`:
+- [x] Создать `links.astro`:
   - LinksLayout
   - Avatar/Logo сверху
   - Name и tagline

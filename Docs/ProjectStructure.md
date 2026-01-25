@@ -21,42 +21,31 @@
 ## Root Directory
 
 ```
-artfrost-portfolio/
-├── .github/                    # GitHub конфигурация
-├── .vscode/                    # VS Code настройки
-├── public/                     # Статические файлы (без обработки)
-├── src/                        # Исходный код
-├── scripts/                    # CLI скрипты
-├── tests/                      # Тесты (Phase 2+)
-├── .env.example                # Пример переменных окружения
-├── .eslintrc.js                # ESLint Flat Config
-├── .gitignore                  # Git ignore
-├── .nvmrc                      # Node.js версия
-├── .prettierrc                 # Prettier конфигурация
-├── astro.config.mjs            # Astro конфигурация
-├── package.json                # Зависимости и скрипты
-├── tsconfig.json               # TypeScript конфигурация
-├── vercel.json                 # Vercel конфигурация
-└── README.md                   # Документация проекта
+ART FROST/
+├── Docs/                       # Продуктовые документы (PRD, UI/UX, TechStack, etc.)
+├── website/                    # Astro-приложение (вся реализация сайта)
+├── .github/                    # GitHub конфигурация репозитория
+└── .vscode/                    # VS Code настройки репозитория
 ```
 
 ### Описание корневых файлов
 
 | Файл | Назначение |
 |------|------------|
-| `astro.config.mjs` | Конфигурация Astro: интеграции (React, Sitemap, Vercel), Vite plugins, настройки сайта |
-| `tsconfig.json` | TypeScript: strict mode, path aliases (`@/*`, `@components/*`, `@lib/*`) |
-| `vercel.json` | Vercel: headers, redirects, regions |
-| `.env.example` | Шаблон переменных окружения для локальной разработки |
-| `package.json` | npm scripts: `dev`, `build`, `preview`, `lint`, `format`, `new:project` |
+| `website/astro.config.mjs` | Конфигурация Astro: интеграции (React, Sitemap, Vercel), Vite plugins, prefetch |
+| `website/tsconfig.json` | TypeScript: strict mode, path aliases (`@/*`, `@components/*`, `@lib/*`) |
+| `website/vercel.json` | Vercel: headers, redirects, regions |
+| `website/.env.example` | Шаблон переменных окружения для локальной разработки |
+| `website/package.json` | npm scripts: `dev`, `build`, `preview`, `lint`, `format`, `new:project`, `projects` |
 
 ---
 
-## scripts/
+## website/scripts/
 
 ```
-scripts/
+website/scripts/
 ├── create-project.mjs          # CLI для создания нового проекта
+├── manage-projects.mjs         # CLI для управления проектами (list/validate, etc.)
 └── download-fonts.sh           # Скрипт загрузки шрифтов
 ```
 
@@ -114,10 +103,10 @@ npm run new:project
 
 ---
 
-## public/
+## website/public/
 
 ```
-public/
+website/public/
 ├── assets/
 │   ├── 3d/                     # 3D визуальные ассеты
 │   │   ├── hero-star.webp      # Hero section 3D star
@@ -153,17 +142,16 @@ public/
 
 ---
 
-## src/
-
+## website/src/
+## website/src/components/
 ```
 src/
-├── components/                 # UI компоненты
+website/src/components/
 ├── content/                    # Astro Content Collections
 ├── data/                       # Статические данные (JSON, constants)
 ├── layouts/                    # Page layouts
 ├── lib/                        # Утилиты и сервисы
 ├── pages/                      # Маршруты (file-based routing)
-├── styles/                     # Глобальные стили
 └── types/                      # TypeScript типы
 ```
 
@@ -189,19 +177,8 @@ src/components/
 │   ├── Navigation.astro        # Desktop navigation links
 │   ├── MobileMenu.tsx          # React: Mobile hamburger menu (client:media)
 │   └── ThemeToggle.tsx         # React: Theme switcher (client:load)
-│
-├── home/                       # Компоненты главной страницы
-│   ├── Hero.astro              # Hero section с 3D ассетом
-│   ├── FeaturedProjects.astro  # Секция featured проектов
-│   ├── SocialLinks.astro       # Секция социальных ссылок
-│   └── ValueProposition.astro  # Optional: ценностное предложение
-│
-├── about/                      # Компоненты About страницы
-│   ├── AboutHero.astro         # Hero с аватаром и био
-│   ├── SkillsList.astro        # Список навыков/технологий
-│   └── Timeline.astro          # Experience timeline
-│
-├── projects/                   # Компоненты Projects
+│   ├── ImageLightbox.tsx       # React: lightbox/галерея изображений (client:load)
+│   └── ProjectDetail.astro     # Детальная информация о проекте
 │   ├── ProjectCard.astro       # Карточка проекта для grid
 │   ├── ProjectGrid.astro       # Grid layout для проектов
 │   ├── ProjectFilters.tsx      # React: фильтры по тегам (client:idle)
@@ -209,14 +186,14 @@ src/components/
 │
 ├── links/                      # Компоненты Links страницы
 │   ├── LinkCard.astro          # Карточка ссылки (Linktree style)
-│   └── LinksList.astro         # Вертикальный список ссылок
-│
+│   └── CreativeWorkJsonLd.astro # CreativeWork schema (Projects)
 ├── blog/                       # Post-MVP: Blog компоненты
 │   ├── BlogCard.astro          # Карточка поста для списка
 │   ├── BlogGrid.astro          # Grid layout для постов
 │   ├── BlogPostContent.astro   # Контент поста (parsed HTML)
 │   ├── BlogMeta.astro          # Мета-информация (дата, время чтения)
-│   ├── RelatedPosts.astro      # Связанные посты
+  ├── ResponsiveImage.astro   # Optimized responsive image
+  └── ScrollFrameAnimation.tsx # React: анимация рамок (client:visible/idle)
 │   └── ShareButtons.tsx        # React: кнопки шеринга (client:visible)
 │
 ├── seo/                        # SEO компоненты
@@ -251,11 +228,11 @@ src/components/
 | `ThemeToggle.tsx` | `client:load` | Критично для UX, должно работать сразу |
 | `MobileMenu.tsx` | `client:media="(max-width: 768px)"` | Нужен только на мобильных |
 | `ProjectFilters.tsx` | `client:idle` | Некритичная интерактивность |
-| `ShareButtons.tsx` | `client:visible` | Появляется ниже fold |
+| `ImageLightbox.tsx` | `client:load` | Галерея/лайтбокс должна быть интерактивной сразу |
 
 ---
 
-## src/content/
+## website/src/content/
 
 ```
 src/content/
@@ -363,7 +340,7 @@ npm run new:project
 
 ---
 
-## src/data/
+## website/src/data/
 
 ```
 src/data/
@@ -425,7 +402,7 @@ export const socialLinks = [
 
 ---
 
-## src/layouts/
+## website/src/layouts/
 
 ```
 src/layouts/
@@ -466,7 +443,7 @@ LinksLayout.astro extends BaseLayout
 
 ---
 
-## src/lib/
+## website/src/lib/
 
 ```
 src/lib/
@@ -509,7 +486,7 @@ export function cn(...inputs: ClassValue[]) {
 
 ---
 
-## src/pages/
+## website/src/pages/
 
 ```
 src/pages/
@@ -546,7 +523,7 @@ src/pages/
 
 ---
 
-## src/styles/
+## website/src/styles/
 
 ```
 src/styles/
@@ -631,7 +608,7 @@ body {
 
 ---
 
-## src/types/
+## website/src/types/
 
 ```
 src/types/

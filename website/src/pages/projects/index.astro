@@ -9,7 +9,6 @@ import Section from '@components/common/Section.astro';
 import Container from '@components/common/Container.astro';
 import BreadcrumbJsonLd from '@components/seo/BreadcrumbJsonLd.astro';
 import { ProjectGrid } from '@components/projects';
-import { siteConfig } from '@data/site-config';
 
 // Get all projects from Content Collections
 const allProjects = await getCollection('projects');
@@ -46,11 +45,11 @@ const breadcrumbItems = [
     <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
       <div
         class="absolute top-0 right-0 w-[600px] h-[600px] opacity-100"
-        style="background: radial-gradient(circle at 70% 20%, rgba(16,185,129,0.15) 0%, transparent 60%);"
+        style="background: radial-gradient(circle at 70% 20%, rgba(52,184,99,0.15) 0%, transparent 60%);"
       />
       <div
         class="absolute bottom-0 left-0 w-[500px] h-[500px] opacity-100"
-        style="background: radial-gradient(circle at 20% 80%, rgba(16,185,129,0.10) 0%, transparent 65%);"
+        style="background: radial-gradient(circle at 20% 80%, rgba(52,184,99,0.10) 0%, transparent 65%);"
       />
       <div
         class="absolute inset-0"

@@ -8,7 +8,6 @@ import PageLayout from '@layouts/PageLayout.astro';
 import BreadcrumbJsonLd from '@components/seo/BreadcrumbJsonLd.astro';
 import CreativeWorkJsonLd from '@components/seo/CreativeWorkJsonLd.astro';
 import { ProjectDetail } from '@components/projects';
-import { siteConfig } from '@data/site-config';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');

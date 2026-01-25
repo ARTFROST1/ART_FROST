@@ -39,9 +39,9 @@ const {
 // Experience type styling
 const typeStyles: Record<ExperienceType, { bg: string; text: string; border: string }> = {
   work: { 
-    bg: 'bg-emerald-500/10', 
-    text: 'text-emerald-400', 
-    border: 'border-emerald-500/30' 
+    bg: 'bg-brand-500/10', 
+    text: 'text-brand-500', 
+    border: 'border-brand-500/30' 
   },
   education: { 
     bg: 'bg-blue-500/10', 
@@ -166,8 +166,8 @@ if (limit) {
 
                     {/* Current indicator */}
                     {entry.isCurrent && (
-                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-brand-500/20 text-brand-500 border border-brand-500/30">
+                        <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
                         Сейчас
                       </span>
                     )}

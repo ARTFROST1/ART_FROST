@@ -8,11 +8,14 @@ import { useTheme } from '@lib/theme';
 export function ThemeToggle() {
   const { toggleTheme, mounted, isDark } = useTheme();
 
+  // Общие стили для кнопки - одинаковые для mounted и unmounted
+  const buttonStyles = "relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--color-border-glass-strong)] bg-[var(--color-bg-glass)] backdrop-blur-md transition-all duration-200 hover:border-white/20 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]";
+
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
     return (
       <button
-        className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-200"
+        className={buttonStyles}
         aria-label="Toggle theme"
         disabled
       >
@@ -45,9 +48,9 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="group relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-200 hover:border-white/20 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-bg-primary"
+      className={buttonStyles}
       aria-label={isDark ? 'Переключить на светлую тему' : 'Переключить на тёмную тему'}
-      title={isDark ? 'Светлая тема' : 'Тёмная тема'}
+      title={isDark ? 'Светлая тема' : 'Тёмная тему'}
     >
       {/* Sun Icon (Light Mode) */}
       <svg
@@ -63,7 +66,7 @@ export function ThemeToggle() {
         className={`absolute transition-all duration-300 ${
           isDark
             ? 'rotate-90 scale-0 opacity-0'
-            : 'rotate-0 scale-100 opacity-100 text-primary'
+            : 'rotate-0 scale-100 opacity-100 text-[var(--color-primary)]'
         }`}
         aria-hidden="true"
       >
@@ -91,7 +94,7 @@ export function ThemeToggle() {
         strokeLinejoin="round"
         className={`absolute transition-all duration-300 ${
           isDark
-            ? 'rotate-0 scale-100 opacity-100 text-primary'
+            ? 'rotate-0 scale-100 opacity-100 text-[var(--color-primary)]'
             : '-rotate-90 scale-0 opacity-0'
         }`}
         aria-hidden="true"

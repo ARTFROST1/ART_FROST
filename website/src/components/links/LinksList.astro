@@ -1,0 +1,112 @@
+---
+/**
+ * LinksList Component
+ * Vertical stack of LinkCard components with staggered animation
+ * Features: centered layout, animation on scroll, grouped sections
+ *
+ * @example
+ * <LinksList links={socialLinks} />
+ */
+
+import { cn } from '@lib/utils';
+import LinkCard from './LinkCard.astro';
+import type { SocialLinkConfig } from '@data/social-links';
+
+interface Props {
+  /** Array of social links */
+  links: SocialLinkConfig[];
+  /** Additional CSS classes */
+  class?: string;
+  /** Show descriptions */
+  showDescriptions?: boolean;
+  /** Maximum number of links to show */
+  limit?: number;
+}
+
+const { links, class: className, showDescriptions = true, limit } = Astro.props;
+
+// Filter and sort links
+const displayLinks = limit ? links.slice(0, limit) : links;
+
+// Separate primary and secondary links
+const primaryLinks = displayLinks.filter((link) => link.isPrimary);
+const secondaryLinks = displayLinks.filter((link) => !link.isPrimary);
+---
+
+<div class={cn('flex flex-col gap-3', className)}>
+  <!-- Primary Links -->
+  {
+    primaryLinks.length > 0 && (
+      <div class="space-y-3">
+        {primaryLinks.map((link, index) => (
+          <div
+            class="link-card-wrapper"
+            style={`--delay: ${index * 75}ms`}
+          >
+            <LinkCard
+              href={link.url}
+              icon={link.icon}
+              title={link.name}
+              description={showDescriptions ? link.description : undefined}
+              color={link.color}
+              featured={true}
+            />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  <!-- Separator -->
+  {
+    primaryLinks.length > 0 && secondaryLinks.length > 0 && (
+      <div class="flex items-center gap-4 py-2">
+        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--color-border-glass)] to-transparent" />
+        <span class="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">
+          Ещё
+        </span>
+        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--color-border-glass)] to-transparent" />
+      </div>
+    )
+  }
+
+  <!-- Secondary Links -->
+  {
+    secondaryLinks.length > 0 && (
+      <div class="space-y-3">
+        {secondaryLinks.map((link, index) => (
+          <div
+            class="link-card-wrapper"
+            style={`--delay: ${(primaryLinks.length + index) * 75}ms`}
+          >
+            <LinkCard
+              href={link.url}
+              icon={link.icon}
+              title={link.name}
+              description={showDescriptions ? link.description : undefined}
+              color={link.color}
+            />
+          </div>
+        ))}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .link-card-wrapper {
+    animation: fade-in-up 0.5s ease-out both;
+    animation-delay: var(--delay, 0ms);
+  }
+</style>

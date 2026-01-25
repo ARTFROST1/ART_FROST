@@ -237,7 +237,7 @@ async function ask(rl, question, options = {}) {
 
 async function askChoice(rl, question, choices, defaultValue) {
   const choicesStr = choices
-    .map((c, i) => (c === defaultValue ? `[${c}]` : c))
+    .map((choice) => (choice === defaultValue ? `[${choice}]` : choice))
     .join(' / ');
   
   const prompt = c('cyan', '? ') + c('bright', question) + c('dim', ` (${choicesStr}): `);
@@ -290,7 +290,7 @@ async function getNextOrder() {
       if (content.order && content.order > maxOrder) {
         maxOrder = content.order;
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
   }

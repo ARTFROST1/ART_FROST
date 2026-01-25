@@ -233,7 +233,7 @@ async function createProject(rl) {
 
 // ============= READ =============
 
-async function listProjects(rl) {
+async function listProjects(_rl) {
   console.log('\n' + c('cyan', '═══════════════════════════════════════════════════════════'));
   console.log(c('green', '📚 Все проекты\n'));
 
@@ -508,7 +508,7 @@ async function ask(rl, question, options = {}) {
 
 async function askChoice(rl, question, choices, defaultValue) {
   const choicesStr = choices
-    .map((c, i) => (c === defaultValue ? `[${c}]` : c))
+    .map((choice) => (choice === defaultValue ? `[${choice}]` : choice))
     .join(' / ');
   
   const prompt = c('cyan', '? ') + c('bright', question) + c('dim', ` (${choicesStr}): `);

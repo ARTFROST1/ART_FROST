@@ -1,0 +1,163 @@
+---
+/**
+ * LinkCard Component
+ * Glassmorphic button-style card for Links page
+ * Features: icon, title, description, hover glow effect
+ *
+ * @example
+ * <LinkCard
+ *   href="https://t.me/artfrost"
+ *   icon="telegram"
+ *   title="Telegram"
+ *   description="Канал о разработке"
+ *   color="#26A5E4"
+ * />
+ */
+
+import { cn } from '@lib/utils';
+import Icon from '@components/common/Icon.astro';
+
+interface Props {
+  /** External URL */
+  href: string;
+  /** Icon name */
+  icon: string;
+  /** Link title */
+  title: string;
+  /** Short description (optional) */
+  description?: string;
+  /** Brand color for accent (optional) */
+  color?: string;
+  /** Additional CSS classes */
+  class?: string;
+  /** Featured/primary link */
+  featured?: boolean;
+}
+
+const {
+  href,
+  icon,
+  title,
+  description,
+  color,
+  class: className,
+  featured = false,
+} = Astro.props;
+
+// Card styles
+const cardStyles = cn(
+  // Base layout
+  'group relative flex items-center gap-4',
+  'w-full px-5 py-4',
+  'rounded-2xl',
+  // Glass background - visible on dark
+  'bg-[rgba(255,255,255,0.06)]',
+  'backdrop-blur-xl',
+  // Border - visible
+  'border border-[rgba(255,255,255,0.12)]',
+  // Inner glow
+  'shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_1px_3px_rgba(0,0,0,0.2)]',
+  // Transitions
+  'transition-all duration-300 ease-out',
+  // Hover states
+  'hover:bg-[rgba(255,255,255,0.1)]',
+  'hover:border-[rgba(255,255,255,0.2)]',
+  'hover:scale-[1.02]',
+  'hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_12px_rgba(0,0,0,0.3)]',
+  // Light theme - немного серый фон для контраста
+  '[html[data-theme="light"]_&]:bg-[rgba(0,0,0,0.03)]',
+  '[html[data-theme="light"]_&]:border-[rgba(0,0,0,0.08)]',
+  '[html[data-theme="light"]_&]:shadow-[0_2px_8px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.6)]',
+  '[html[data-theme="light"]_&]:hover:bg-[rgba(0,0,0,0.05)]',
+  '[html[data-theme="light"]_&]:hover:border-[rgba(0,0,0,0.12)]',
+  '[html[data-theme="light"]_&]:hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.6)]',
+  // Focus
+  'focus:outline-none focus:ring-2 focus:ring-[rgba(255,255,255,0.22)]',
+  '[html[data-theme="light"]_&]:focus:ring-[rgba(0,0,0,0.14)]',
+  'focus:ring-offset-2 focus:ring-offset-[var(--color-bg-primary)]',
+  // Featured variant - add primary glow
+  featured && [
+    'shadow-[0_0_25px_-8px_rgba(52,184,99,0.5),inset_0_1px_0_rgba(255,255,255,0.1),0_1px_3px_rgba(0,0,0,0.2)]',
+    'hover:shadow-[0_0_35px_-8px_rgba(52,184,99,0.6),inset_0_1px_0_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.3)]',
+  ],
+  className
+);
+
+// Icon container styles
+const iconStyles = cn(
+  'relative flex items-center justify-center',
+  'w-11 h-11 shrink-0',
+  'rounded-xl',
+  // Glass effect
+  'bg-[var(--color-bg-glass-strong)]',
+  'border border-[var(--color-border-glass)]',
+  // Transition
+  'transition-all duration-300',
+  // Hover
+  'group-hover:border-[var(--color-border-glass-strong)]'
+);
+---
+
+<a
+  href={href}
+  class={cardStyles}
+  target="_blank"
+  rel="noopener noreferrer"
+  style={color ? `--link-accent: ${color}` : undefined}
+>
+  <!-- Hover glow effect -->
+  <div
+    class={cn(
+      'absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300',
+      'group-hover:opacity-100',
+      'pointer-events-none'
+    )}
+    style={`background: radial-gradient(circle at 30% 50%, ${color || 'var(--color-primary-glow)'} 0%, transparent 70%); opacity: 0.15;`}
+  >
+  </div>
+
+  <!-- Icon -->
+  <div class={iconStyles}>
+    <!-- Icon glow on hover -->
+    <div
+      class="absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      style={`background: radial-gradient(circle, ${color || 'var(--color-primary-glow)'} 0%, transparent 70%); opacity: 0.3;`}
+    >
+    </div>
+    <Icon
+      name={icon}
+      size="lg"
+      class="relative z-10 text-[var(--color-text-heading)] transition-transform duration-300 group-hover:scale-110"
+    />
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 flex flex-col min-w-0">
+    <span
+      class="font-semibold text-[var(--color-text-heading)] truncate transition-colors duration-300"
+    >
+      {title}
+    </span>
+    {
+      description && (
+        <span class="text-sm text-[var(--color-text-muted)] truncate mt-0.5">
+          {description}
+        </span>
+      )
+    }
+  </div>
+
+  <!-- Arrow indicator -->
+  <div
+    class="ml-auto shrink-0 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
+  >
+    <Icon name="arrow-up-right" size="sm" class="text-[var(--color-text-muted)]" />
+  </div>
+</a>
+
+<style>
+  /* Custom hover glow with brand color */
+  a:hover {
+    box-shadow: 0 0 40px -10px var(--link-accent, var(--color-primary-glow));
+  }
+</style>

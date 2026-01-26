@@ -1,0 +1,178 @@
+---
+/**
+ * Asset3D Component
+ * Универсальный компонент для отображения 3D-ассетов с автоматическими glow-эффектами
+ * 
+ * Автоматически подставляет путь к изображению из /assets/3d/ и применяет эффекты
+ * 
+ * @example
+ * <!-- Простое использование -->
+ * <Asset3D name="hero-star" alt="Hero star" />
+ * 
+ * <!-- С кастомизацией -->
+ * <Asset3D 
+ *   name="avatar-sphere" 
+ *   alt="Avatar" 
+ *   glowIntensity="high"
+ *   animation="float"
+ *   class="max-w-md"
+ * />
+ */
+
+import { cn } from '@lib/utils';
+
+interface Props {
+  /**
+   * Имя файла 3D-ассета (без расширения и пути)
+   * Автоматически добавится путь /assets/3d/ и расширение .webp
+   * 
+   * @example "hero-star" -> "/assets/3d/hero-star.webp"
+   */
+  name: string;
+  /**
+   * Alt-текст для accessibility
+   * Используй "" для декоративных изображений
+   */
+  alt: string;
+  /**
+   * Интенсивность glow-эффекта
+   * @default 'medium'
+   */
+  glowIntensity?: 'low' | 'medium' | 'high' | 'none';
+  /**
+   * Позиция glow-эффекта
+   * @default 'center'
+   */
+  glowPosition?: 'center' | 'top' | 'bottom' | 'left' | 'right';
+  /**
+   * Анимация 3D-ассета
+   * @default 'none'
+   */
+  animation?: 'none' | 'float' | 'float-slow' | 'pulse' | 'rotate-slow';
+  /**
+   * Eager loading для LCP изображений (hero section)
+   * @default false
+   */
+  priority?: boolean;
+  /**
+   * Дополнительные CSS классы для контейнера
+   */
+  class?: string;
+  /**
+   * Дополнительные CSS классы для изображения
+   */
+  imageClass?: string;
+}
+
+const {
+  name,
+  alt,
+  glowIntensity = 'medium',
+  glowPosition = 'center',
+  animation = 'none',
+  priority = false,
+  class: className,
+  imageClass,
+} = Astro.props;
+
+// Генерируем путь к изображению
+const imagePath = `/assets/3d/${name}.webp`;
+
+// Стили для glow-эффекта
+const glowIntensities = {
+  none: '',
+  low: 'rgba(16, 185, 129, 0.1)',
+  medium: 'rgba(16, 185, 129, 0.2)',
+  high: 'rgba(16, 185, 129, 0.3)',
+};
+
+const glowPositions = {
+  center: '50% 50%',
+  top: '50% 20%',
+  bottom: '50% 80%',
+  left: '20% 50%',
+  right: '80% 50%',
+};
+
+// CSS класс для анимации
+const animationClasses = {
+  none: '',
+  float: 'animate-float',
+  'float-slow': 'animate-float-slow',
+  pulse: 'animate-pulse',
+  'rotate-slow': 'animate-rotate-slow',
+};
+
+const glowStyle = glowIntensity !== 'none'
+  ? `background: radial-gradient(circle at ${glowPositions[glowPosition]}, ${glowIntensities[glowIntensity]} 0%, transparent 70%);`
+  : '';
+---
+
+<div class={cn('relative', className)}>
+  <!-- Radial Glow Background -->
+  {glowIntensity !== 'none' && (
+    <div
+      class="absolute inset-0 -z-10"
+      style={glowStyle}
+      aria-hidden="true"
+    />
+  )}
+
+  <!-- 3D Asset Image -->
+  <img
+    src={imagePath}
+    alt={alt}
+    loading={priority ? 'eager' : 'lazy'}
+    decoding="async"
+    fetchpriority={priority ? 'high' : 'auto'}
+    class={cn(
+      'relative z-10 w-full h-auto',
+      animationClasses[animation],
+      imageClass
+    )}
+  />
+</div>
+
+<style>
+  /* Float animation */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Slow float animation */
+  @keyframes float-slow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  .animate-float-slow {
+    animation: float-slow 8s ease-in-out infinite;
+  }
+
+  /* Slow rotate animation */
+  @keyframes rotate-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .animate-rotate-slow {
+    animation: rotate-slow 20s linear infinite;
+  }
+</style>

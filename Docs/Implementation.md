@@ -603,19 +603,35 @@
 **Время:** 2-3 часа  
 **Зависимости:** нет
 
+- [x] Создана структура папок для assets:
+  - `public/assets/3d/` — для 3D-изображений
+  - `public/assets/images/og/` — для OG images
+- [x] Создан компонент `Asset3D.astro` для автоматического использования 3D assets
+- [x] Подготовлены README с требованиями к 3D assets
 - [ ] Создать/найти 3D assets согласно UI_UX.md:
-  - `hero-star.webp` — Hero section star
-  - `floating-layers.webp` — Value proposition
+  - `hero-star.webp` — Hero section star (или использовать ScrollFrameAnimation)
   - `avatar-sphere.webp` — About page avatar
-  - `code-cube.webp` — Services Dev
-  - `fluid-droplet.webp` — Services Design
-  - `communication-orb.webp` — CTA section
+  - `floating-layers.webp` — Value proposition (Stage 3)
+  - `code-cube.webp` — Services Dev (Stage 3)
+  - `fluid-droplet.webp` — Services Design (Stage 3)
+  - `communication-orb.webp` — CTA section (Stage 3)
 - [ ] Оптимизировать все изображения (WebP/AVIF, правильные размеры)
+- [x] Обновить SEO компонент для OG images
+- [x] Обновить страницы для использования OG images
 - [ ] Создать OG images:
-  - `og/default.png` (1200x630)
-  - Page-specific OG images
+  - `og/default.png` (1200x630) — Главная
+  - `og/about.png` (1200x630) — О себе
+  - `og/projects.png` (1200x630) — Проекты
+  - `og/links.png` (1200x630) — Links (уже указан в коде)
+  - Page-specific OG images для будущих страниц
 - [ ] Добавить favicon.svg и apple-touch-icon.png
 - [ ] Добавить self-hosted fonts (woff2)
+
+**Документация:**
+- ✅ Создан `ASSETS-INSTRUCTION.md` — полная инструкция (15+ страниц)
+- ✅ Создан `QUICK-START-ASSETS.md` — быстрый старт
+- ✅ Создан `ASSETS-SETUP-SUMMARY.md` — summary выполненной работы
+- ✅ Созданы README в папках assets с требованиями
 
 ### 2.25 Performance Optimization
 

@@ -172,10 +172,18 @@
 **Модули:** Vercel Dashboard  
 **Время:** 1 час
 
+**Статус:** ✅ Проект готов к деплою  
+**Инструкция:** См. `website/DEPLOY-GUIDE.md`
+
 - [ ] Подключить GitHub репозиторий к Vercel
-- [ ] Настроить Preview deployments для PR
+  - Root Directory: `website` (обязательно!)
+  - Framework: Astro (автоопределение)
+  - Build Command: `npm run build`
+  - Output Directory: `dist`
+- [ ] Настроить Preview deployments для PR (автоматически после подключения)
 - [ ] Проверить первый деплой пустого проекта
-- [ ] Настроить Environment Variables (если нужны)
+- [ ] Обновить `site` URL в `astro.config.mjs` на production URL
+- [ ] Настроить Environment Variables (опционально, для Stage 3)
 
 ---
 

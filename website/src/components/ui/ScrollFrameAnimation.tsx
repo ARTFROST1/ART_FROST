@@ -41,7 +41,9 @@ export default function ScrollFrameAnimation({
       const img = new Image();
       const frameNum = i.toString().padStart(3, '0');
       const frameName = framePattern.replace('{frame}', frameNum);
-      img.src = `${framesPath}/${frameName}`;
+      // Encode filename to handle spaces and special characters
+      const encodedFrameName = frameName.split('/').map(part => encodeURIComponent(part)).join('/');
+      img.src = `${framesPath}/${encodedFrameName}`;
 
       img.onload = () => {
         loadedCount++;

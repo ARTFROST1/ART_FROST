@@ -1,0 +1,29 @@
+{
+  "title": "Biogram",
+  "description": "Функциональность\nСистема рассылки",
+  "shortDescription": "Telegram-бот для изучения биологии с вопросами по различным темам.",
+  "image": "/assets/images/projects/biogram/image.png",
+  "images": [
+    "/assets/images/projects/biogram/1.png",
+    "/assets/images/projects/biogram/2.png"
+
+  ],
+  "tags": [
+    "python",
+    "iogram",
+    "telegram bot api"
+  ],
+  "github": "https://github.com/ARTFROST1/Biogram",
+  "demo": "https://t.me/BiologyQuestions_bot",
+  "featured": true,
+  "order": 102,
+  "date": "2025-04",
+  "status": "completed",
+  "type": "telegram-bot",
+  "role": "Full-Stack Developer",
+  "highlights": [
+    "200+ вопросов",
+    "активаня база пользователей"
+  ],
+  "draft": false
+}

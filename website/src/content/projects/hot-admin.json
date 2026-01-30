@@ -1,0 +1,28 @@
+{
+  "title": "Hot Admin",
+  "description": "программа представляет собой удобный инструмент для эффективного управления гостиничным бизнесом.\nрамме, где дана основная информация и контакт.На главной форме есть две три вкладки: главная, для просмотра таблицы с гостями; статистика, где можно удобно посмотреть загруженность отеля, гостей, которые скоро приедут и уедут, а так же графики с статистикой; о прог",
+  "shortDescription": "Приложения для управлением базой гостей отеля",
+  "image": "/assets/images/projects/hot-admin/hot-admin.png",
+  "images": [
+    "/assets/images/projects/hot-admin/1.png"
+  ],
+  "tags": [
+    "c#",
+    "NuGet",
+    "WindowsForms",
+    "Bunifu",
+    "Guna",
+    "FontAwesome"
+  ],
+  "github": "https://github.com/ARTFROST1/HotAdmin",
+  "featured": false,
+  "order": 101,
+  "date": "2024-01",
+  "status": "completed",
+  "type": "desktop-app",
+  "role": "Full-Stack Developer",
+  "highlights": [
+    "Лауреат 1 степени в номинации \"Программный проект\" XXIII открытого конкурса Интернет ресурсов 2024 год"
+  ],
+  "draft": false
+}

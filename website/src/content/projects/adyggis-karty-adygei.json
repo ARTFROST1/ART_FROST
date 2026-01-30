@@ -1,0 +1,32 @@
+{
+  "title": "AdygGIS: карты Адыгеи",
+  "description": "AdygGIS — это мобильное приложение с интерактивной картой, построенной на Yandex Maps API, где отображаются достопримечательности, туристические маршруты и интересные места Республики Адыгея.\nтему авторизации и отзывов через Supabase.Сис",
+  "shortDescription": "обильное приложение с интерактивной картой, где отображаются интересные места Республики Адыгея.",
+  "image": "/assets/images/projects/adyggis-karty-adygei/1.png",
+  "tags": [
+    "Expo",
+    "React Native",
+    "Kotlin",
+    "Jetpack Compose",
+    "IOS",
+    "Andriod",
+    "mobile"
+  ],
+  "github": "https://github.com/ARTFROST1/AdygGIS",
+  "demo": "https://adyggis.vercel.app/",
+  "featured": true,
+  "order": 105,
+  "date": "2025-09",
+  "status": "in-progress",
+  "type": "mobile-app",
+  "role": "Full-Stack Developer",
+  "highlights": [
+    "Создана Andriod версия",
+    "Создана IOS версия",
+    "создан website посадочная",
+    "реализована админ панель",
+    "поддержка синхронизации с облачными данными",
+    "встроенное локальное хранение данных"
+  ],
+  "draft": false
+}

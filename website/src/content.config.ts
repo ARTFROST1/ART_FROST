@@ -14,12 +14,16 @@ const projectStatusSchema = z.enum([
  * Project type enum
  */
 const projectTypeSchema = z.enum([
-  'website',
-  'app',
-  'library',
-  'tool',
-  'template',
-  'other',
+  'website',        // Веб-сайт
+  'mobile-app',     // Мобильное приложение
+  'telegram-bot',   // Telegram бот
+  'game',           // Игра
+  'desktop-app',    // Десктоп приложение
+  'library',        // Библиотека
+  'tool',           // Инструмент
+  'template',       // Шаблон
+  'api',            // API/Backend
+  'other',          // Другое
 ]);
 
 /**

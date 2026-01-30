@@ -435,6 +435,16 @@ main {
   scrollbar-color: var(--color-text-muted) var(--color-bg-secondary);
 }
 
+/* Hide scrollbar utility class */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* ===== SELECTION STYLING ===== */
 
 ::selection {

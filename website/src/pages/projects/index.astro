@@ -8,18 +8,21 @@ import PageLayout from '@layouts/PageLayout.astro';
 import Section from '@components/common/Section.astro';
 import Container from '@components/common/Container.astro';
 import BreadcrumbJsonLd from '@components/seo/BreadcrumbJsonLd.astro';
-import { ProjectGrid } from '@components/projects';
+import { ProjectGrid, ProjectTypeFilters } from '@components/projects';
 
 // Get all projects from Content Collections
 const allProjects = await getCollection('projects');
 const projects = allProjects
   .filter(project => !project.data.draft)
   .sort((a, b) => {
-    // Featured projects first, then by order
+    // Featured projects first, then by order (descending)
     if (a.data.featured && !b.data.featured) return -1;
     if (!a.data.featured && b.data.featured) return 1;
-    return (a.data.order || 999) - (b.data.order || 999);
+    return (b.data.order || 999) - (a.data.order || 999);
   });
+
+// Get unique project types
+const projectTypes = [...new Set(projects.map(p => p.data.type))].sort();
 
 // Page SEO
 const title = 'Проекты';
@@ -76,9 +79,15 @@ const breadcrumbItems = [
 
       <!-- Projects Grid -->
       <div class="relative z-10">
+        <!-- Type Filters -->
+        <ProjectTypeFilters 
+          client:load
+          types={projectTypes}
+        />
+
         <ProjectGrid 
           projects={projects} 
-          layout="bento"
+          layout="grid"
           showFeatured={true}
         />
                 
@@ -109,6 +118,45 @@ const breadcrumbItems = [
     animatedElements.forEach((el) => observer.observe(el));
   };
 
-  document.addEventListener('DOMContentLoaded', initAnimations);
-  document.addEventListener('astro:page-load', initAnimations);
+  // Type filter handling
+  const handleTypeFilter = () => {
+    window.addEventListener('projectTypeFilterChange', ((event: CustomEvent) => {
+      const selectedType = event.detail.type;
+      const projectCards = document.querySelectorAll('[data-project-type]');
+      
+      projectCards.forEach((card) => {
+        const cardType = card.getAttribute('data-project-type');
+        const article = card.closest('article');
+        const wrapper = article?.parentElement;
+        
+        if (!selectedType || cardType === selectedType) {
+          // Show card
+          if (wrapper) {
+            wrapper.style.display = '';
+          }
+          if (article) {
+            article.style.display = '';
+          }
+        } else {
+          // Hide card
+          if (wrapper) {
+            wrapper.style.display = 'none';
+          }
+          if (article) {
+            article.style.display = 'none';
+          }
+        }
+      });
+    }) as EventListener);
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initAnimations();
+    handleTypeFilter();
+  });
+  
+  document.addEventListener('astro:page-load', () => {
+    initAnimations();
+    handleTypeFilter();
+  });
 </script>

@@ -1,0 +1,40 @@
+{
+  "title": "Obrazz: ИИ гардероб",
+  "description": "Основные функции MVP:\nПрофиль пользователя — управление образами, подписка, настройки",
+  "shortDescription": "Умный персональный гардероб с AI-стилистом для автоматического подбора образов и виртуальной примеркой на фото пользователя.",
+  "image": "/assets/images/projects/obrazz-ii-garderob/1.png",
+  "images": [
+    "/assets/images/projects/obrazz-ii-garderob/2.png",
+    "/assets/images/projects/obrazz-ii-garderob/3.png"
+  ],
+  "tags": [
+    "React Native",
+    "Expo",
+    "IOS",
+    "Andriod",
+    "Ruby",
+    "Swift",
+    "Typescript",
+    "React",
+    "Tailwind CSS",
+    "Vercel",
+    "Render",
+    "mobile"
+  ],
+  "github": "https://github.com/ARTFROST1/obrazz",
+  "demo": "https://obrazz.vercel.app/",
+  "featured": true,
+  "order": 106,
+  "date": "2025-10",
+  "status": "in-progress",
+  "type": "mobile-app",
+  "role": "Full-Stack Developer",
+  "highlights": [
+    "Победитель регионального этапа всероссийского конкурса \"Я в деле\" 8 сезон 2025",
+    "реализация кроссплатформенного приложения",
+    "функции ИИ примерки и стилиста",
+    "вебсайт для личного кабинета пользователей",
+    "страница лендинг"
+  ],
+  "draft": false
+}

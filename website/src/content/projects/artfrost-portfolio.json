@@ -20,7 +20,7 @@
   ],
   "github": "https://github.com/artfrost/portfolio",
   "demo": "https://artfrost.vercel.app",
-  "featured": true,
+  "featured": false,
   "order": 1,
   "date": "2026-01",
   "status": "in-progress",

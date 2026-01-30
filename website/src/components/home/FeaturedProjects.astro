@@ -25,10 +25,10 @@ const { class: className } = Astro.props;
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
   .filter(project => project.data.featured && !project.data.draft)
-  .sort((a, b) => (a.data.order || 999) - (b.data.order || 999))
-  .slice(0, 4); // Limit to 4 featured projects
+  .sort((a, b) => (b.data.order || 999) - (a.data.order || 999))
+  .slice(0, 5); // Limit to 5 featured projects
 ---
-
+  
 <Section
   id="projects"
   spacing="xl"

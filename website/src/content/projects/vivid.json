@@ -1,0 +1,29 @@
+{
+  "title": "Vivid",
+  "description": "Приложение объединяет функциональность заметок, планировщика задач и напоминаний в одном инструменте для повышения личной продуктивности. Интерфейс вдохновлён стилем Obsidian — с поддержкой Markdown, древовидной структурой заметок и гибкими связями между ними. Заметки и задачи можно хранить локально или в облаке, используя привычный формат Markdown.",
+  "shortDescription": "Удобные заметки и напоминания с ИИ ассистентом",
+  "image": "/assets/images/projects/vivid/image.png",
+  "images": [
+    "/assets/images/projects/vivid/1.png"
+  ],
+  "tags": [
+    "Expo",
+    "Ract Native",
+    "IOS",
+    "Andriod",
+    "mobile"
+  ],
+  "github": "https://github.com/ARTFROST1/VividBest",
+  "featured": false,
+  "order": 103,
+  "date": "2025-05",
+  "status": "completed",
+  "type": "mobile-app",
+  "role": "Full-Stack Developer",
+  "highlights": [
+    "Expo",
+    "React Native",
+    "участие в конкурсе \"Я в Деле\" 7 сезон"
+  ],
+  "draft": false
+}

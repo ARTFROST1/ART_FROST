@@ -57,10 +57,18 @@ export interface Props {
    */
   demoUrl?: string;
   /**
-   * Тип проекта: 'SoftwareApplication' | 'WebSite' | 'CreativeWork'
+   * Тип проекта для Schema.org
+   * Поддерживает все основные типы контента
    * @default 'CreativeWork'
    */
-  workType?: 'SoftwareApplication' | 'WebSite' | 'CreativeWork';
+  workType?: 
+    | 'SoftwareApplication' 
+    | 'MobileApplication'
+    | 'WebSite' 
+    | 'CreativeWork'
+    | 'VideoGame'
+    | 'SoftwareSourceCode'
+    | 'WebAPI';
 }
 
 const SITE_URL = Astro.site?.toString() || 'https://artfrost.vercel.app';

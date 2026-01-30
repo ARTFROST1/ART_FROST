@@ -32,7 +32,33 @@ const colors = {
 
 const c = (color, text) => `${colors[color]}${text}${colors.reset}`;
 
-const PROJECT_TYPES = ['website', 'app', 'library', 'tool', 'template', 'other'];
+// Типы проектов с описаниями
+const PROJECT_TYPES = [
+  'website',        // 🌐 Веб-сайты
+  'mobile-app',     // 📱 Мобильные приложения
+  'telegram-bot',   // 🤖 Telegram боты
+  'game',           // 🎮 Игры
+  'desktop-app',    // 💻 Десктоп приложения
+  'library',        // 📦 Библиотеки
+  'tool',           // 🔧 Инструменты
+  'template',       // 📋 Шаблоны
+  'api',            // 🔌 API/Backend
+  'other'           // 📁 Другое
+];
+
+const PROJECT_TYPE_LABELS = {
+  'website': '🌐 Веб-сайт',
+  'mobile-app': '📱 Мобильное приложение',
+  'telegram-bot': '🤖 Telegram бот',
+  'game': '🎮 Игра',
+  'desktop-app': '💻 Десктоп приложение',
+  'library': '📦 Библиотека',
+  'tool': '🔧 Инструмент',
+  'template': '📋 Шаблон',
+  'api': '🔌 API/Backend',
+  'other': '📁 Другое'
+};
+
 const PROJECT_STATUSES = ['completed', 'in-progress', 'planned', 'archived'];
 const POPULAR_TAGS = [
   'React', 'TypeScript', 'Astro', 'Next.js', 'Tailwind CSS', 
@@ -507,6 +533,39 @@ async function ask(rl, question, options = {}) {
 }
 
 async function askChoice(rl, question, choices, defaultValue) {
+  // Если это выбор типа проекта, показываем с иконками
+  if (question.includes('Тип проекта')) {
+    console.log(c('cyan', '? ') + c('bright', question) + '\n');
+    choices.forEach((choice, index) => {
+      const label = PROJECT_TYPE_LABELS[choice] || choice;
+      const isDefault = choice === defaultValue;
+      const prefix = isDefault ? c('green', '  ▶') : '   ';
+      console.log(`${prefix} ${c('dim', `${index + 1}.`)} ${label}`);
+    });
+    console.log(c('dim', '\nВведи номер, название или нажми Enter для выбора по умолчанию'));
+    
+    const prompt = c('cyan', 'Выбор') + c('dim', ` [${defaultValue}]`) + ': ';
+    const answer = (await rl.question(prompt)).trim().toLowerCase();
+    
+    if (!answer) return defaultValue;
+    
+    // Проверяем номер
+    const num = parseInt(answer);
+    if (!isNaN(num) && num >= 1 && num <= choices.length) {
+      return choices[num - 1];
+    }
+    
+    // Проверяем название
+    const match = choices.find(c => c.toLowerCase() === answer);
+    if (!match) {
+      console.log(c('red', '  Неверный выбор. Попробуй снова.\n'));
+      return askChoice(rl, question, choices, defaultValue);
+    }
+    
+    return match;
+  }
+  
+  // Обычный выбор для других вопросов
   const choicesStr = choices
     .map((choice) => (choice === defaultValue ? `[${choice}]` : choice))
     .join(' / ');

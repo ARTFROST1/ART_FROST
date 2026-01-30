@@ -17,6 +17,15 @@ interface Props {
   className?: string;
   /** Alt text for accessibility */
   alt?: string;
+
+  /**
+   * Multiplier for scroll progress.
+   * `2` means the animation completes a full forward+back ping-pong over the normal scroll range.
+   */
+  speedMultiplier?: number;
+
+  /** If true, animation plays forward then backward (ping-pong) based on scroll. */
+  pingPong?: boolean;
 }
 
 export default function ScrollFrameAnimation({
@@ -25,12 +34,17 @@ export default function ScrollFrameAnimation({
   framePattern,
   className = '',
   alt = '3D Animation',
+
+  speedMultiplier = 4,
+  pingPong = true,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const frameIndexRef = useRef(0);
+
+  const rafRef = useRef<number | null>(null);
 
   // Preload all frames
   useEffect(() => {
@@ -94,28 +108,37 @@ export default function ScrollFrameAnimation({
   useEffect(() => {
     if (!imagesLoaded || images.length === 0) return;
 
-    const handleScroll = () => {
+    const updateFrameFromScroll = () => {
+      rafRef.current = null;
+
       const container = containerRef.current;
       if (!container) return;
 
-      // Get scroll progress within viewport
       const rect = container.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      
-      // Calculate scroll progress (0 to 1)
-      // Animation starts when element enters viewport from bottom
-      // and completes when it exits from top
-      const scrollStart = windowHeight;
-      const scrollEnd = -rect.height;
-      const scrollDistance = scrollStart - scrollEnd;
-      const scrollProgress = Math.min(
-        Math.max((scrollStart - rect.top) / scrollDistance, 0),
-        1
-      );
 
-      // Map scroll progress to frame index
+      // Use actual page scroll position
+      // Progress starts at 0 when page is at top (scrollY = 0)
+      // and increases as user scrolls down
+      const scrollY = window.scrollY || window.pageYOffset;
+      
+      // Animation distance: from page top through viewport height + element height
+      const scrollDistance = windowHeight + rect.height;
+      
+      // Base progress (0 to 1 over the scroll distance)
+      const baseProgress = Math.min(Math.max(scrollY / scrollDistance, 0), 1);
+
+      // Apply speed multiplier
+      const t = baseProgress * speedMultiplier;
+
+      // Triangle wave in [0..1] for ping-pong looping.
+      // For t in [0..2]: 0->1->0 (forward then backward).
+      const frameProgress = pingPong
+        ? 1 - Math.abs((t % 2) - 1)
+        : Math.min(t, 1);
+
       const frameIndex = Math.min(
-        Math.floor(scrollProgress * totalFrames),
+        Math.floor(frameProgress * totalFrames),
         totalFrames - 1
       );
 
@@ -125,17 +148,28 @@ export default function ScrollFrameAnimation({
       }
     };
 
-    // Initial draw
+    const requestUpdate = () => {
+      if (rafRef.current !== null) return;
+      rafRef.current = window.requestAnimationFrame(updateFrameFromScroll);
+    };
+
+    // Initial draw at frame 0
     drawFrame(0);
 
     // Add scroll listener with passive flag for better performance
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial call
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+    requestUpdate(); // Initial call
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', requestUpdate);
+      window.removeEventListener('resize', requestUpdate);
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
     };
-  }, [imagesLoaded, images, totalFrames]);
+  }, [imagesLoaded, images, totalFrames, pingPong, speedMultiplier]);
 
   return (
     <div

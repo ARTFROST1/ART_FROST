@@ -74,6 +74,7 @@ const maxTags = size === 'compact' ? 2 : 3;
     className
   )}
   style={animationDelay ? `animation-delay: ${animationDelay}ms;` : undefined}
+  data-project-type={data.type}
 >
   <Card
     href={`/projects/${project.id}`}

@@ -1,0 +1,29 @@
+{
+  "title": "Site LaVillaPine",
+  "description": "Вебсайт для бронирования дома отдыха с бассейном и сауной в Адыгее",
+  "shortDescription": "Вебсайт для бронирования дома отдыха с бассейном и сауной в Адыгее",
+  "image": "/assets/images/projects/site-lavillapine/1.png",
+  "images": [
+    "/assets/images/projects/site-lavillapine/2.png",
+    "/assets/images/projects/site-lavillapine/3.png"
+  ],
+  "tags": [
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Docker"
+  ],
+  "github": "https://github.com/ARTFROST1/LaVillaPineReact2",
+  "demo": "https://lavillapine.onrender.com/#/",
+  "featured": true,
+  "order": 104,
+  "date": "2025-07",
+  "status": "completed",
+  "type": "website",
+  "role": "Full-Stack Developer",
+  "highlights": [
+    "30тыс посететилей за полгода",
+    "успешный запуск сайта для бизнеса"
+  ],
+  "draft": false
+}

@@ -11,7 +11,9 @@ import * as readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, URL } from 'node:url';
+import https from 'node:https';
+import http from 'node:http';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECTS_DIR = path.join(__dirname, '..', 'src', 'content', 'projects');
@@ -32,7 +34,18 @@ const colors = {
 const c = (color, text) => `${colors[color]}${text}${colors.reset}`;
 
 // Допустимые значения
-const PROJECT_TYPES = ['website', 'app', 'library', 'tool', 'template', 'other'];
+const PROJECT_TYPES = [
+  'website',        // Веб-сайт
+  'mobile-app',     // Мобильное приложение
+  'telegram-bot',   // Telegram бот
+  'game',           // Игра
+  'desktop-app',    // Десктоп приложение
+  'library',        // Библиотека
+  'tool',           // Инструмент
+  'template',       // Шаблон
+  'api',            // API/Backend
+  'other'           // Другое
+];
 const PROJECT_STATUSES = ['completed', 'in-progress', 'planned', 'archived'];
 
 // Популярные теги для подсказок
@@ -104,20 +117,38 @@ async function main() {
 
     // === Изображения ===
     console.log('\n' + c('magenta', '🖼️ Изображения\n'));
+    console.log(c('dim', `Изображения будут в папке: public/assets/images/projects/${slug}/\n`));
     
-    const imageName = await ask(rl, 'Имя файла главного изображения', {
+    // Создаём директорию для изображений проекта заранее
+    const projectImagesDir = path.join(IMAGES_DIR, slug);
+    if (!fs.existsSync(projectImagesDir)) {
+      fs.mkdirSync(projectImagesDir, { recursive: true });
+    }
+    
+    const imageInput = await ask(rl, 'Главное изображение', {
       default: `${slug}.png`,
-      hint: 'файл положи в public/assets/images/projects/'
+      hint: 'имя файла (cover.png) или URL (https://...)'
     });
-    const image = `/assets/images/projects/${imageName}`;
+    
+    const imageName = await processImage(imageInput, projectImagesDir, slug, 'cover');
+    const image = `/assets/images/projects/${slug}/${imageName}`;
 
-    const additionalImages = await ask(rl, 'Дополнительные изображения', {
-      hint: 'через запятую, например: screen1.png, screen2.png'
+    const additionalImagesInput = await ask(rl, 'Дополнительные изображения', {
+      hint: 'через запятую: screen1.png, https://..., screen2.png'
     });
-    const images = additionalImages
-      .split(',')
-      .map(i => `/assets/images/projects/${slug}/${i.trim()}`)
-      .filter(i => i !== `/assets/images/projects/${slug}/`);
+    
+    const images = [];
+    if (additionalImagesInput.trim()) {
+      const imageInputs = additionalImagesInput.split(',').map(i => i.trim()).filter(Boolean);
+      for (let i = 0; i < imageInputs.length; i++) {
+        try {
+          const fileName = await processImage(imageInputs[i], projectImagesDir, slug, `screen-${i + 1}`);
+          images.push(`/assets/images/projects/${slug}/${fileName}`);
+        } catch {
+          console.log(c('yellow', `⚠️  Не удалось обработать изображение: ${imageInputs[i]}`));
+        }
+      }
+    }
 
     // === Дополнительно ===
     console.log('\n' + c('magenta', '⭐ Дополнительно\n'));
@@ -167,25 +198,15 @@ async function main() {
     const confirm = await askYesNo(rl, 'Сохранить проект?', true);
 
     if (confirm) {
-      // Создаём директорию для изображений проекта
-      const projectImagesDir = path.join(IMAGES_DIR, slug);
-      if (!fs.existsSync(projectImagesDir)) {
-        fs.mkdirSync(projectImagesDir, { recursive: true });
-      }
-
       // Сохраняем JSON
       fs.writeFileSync(filePath, JSON.stringify(project, null, 2) + '\n');
 
       console.log('\n' + c('green', '✅ Проект успешно создан!'));
       console.log(c('dim', `   Файл: ${filePath}`));
       console.log(c('dim', `   Изображения: ${projectImagesDir}/`));
-      console.log('\n' + c('yellow', '📌 Не забудь:'));
-      console.log(c('dim', `   1. Добавить изображение: public/assets/images/projects/${imageName}`));
-      if (images.length > 0) {
-        console.log(c('dim', `   2. Добавить доп. изображения в: public/assets/images/projects/${slug}/`));
-      }
-      console.log(c('dim', `   3. Запустить dev-сервер: npm run dev`));
-      console.log(c('dim', `   4. Проверить проект на /projects/${slug}`));
+      console.log('\n' + c('yellow', '📌 Проверь:'));
+      console.log(c('dim', `   1. Запустить dev-сервер: npm run dev`));
+      console.log(c('dim', `   2. Открыть проект: /projects/${slug}`));
     } else {
       console.log(c('yellow', '\n⚠️ Создание отменено.'));
     }
@@ -296,6 +317,101 @@ async function getNextOrder() {
   }
   
   return maxOrder + 1;
+}
+
+/**
+ * Обрабатывает изображение: скачивает по URL или использует локальный файл
+ * @param {string} input - URL или имя файла
+ * @param {string} targetDir - директория для сохранения
+ * @param {string} slug - slug проекта
+ * @param {string} defaultName - имя по умолчанию без расширения
+ * @returns {Promise<string>} - итоговое имя файла
+ */
+async function processImage(input, targetDir, slug, defaultName) {
+  const isUrl = input.startsWith('http://') || input.startsWith('https://');
+  
+  if (isUrl) {
+    // Скачиваем изображение
+    console.log(c('dim', `   📥 Скачиваю изображение...`));
+    const ext = getExtensionFromUrl(input) || 'png';
+    const fileName = `${defaultName}.${ext}`;
+    const targetPath = path.join(targetDir, fileName);
+    
+    await downloadImage(input, targetPath);
+    console.log(c('green', `   ✓ Сохранено как ${fileName}`));
+    return fileName;
+  } else {
+    // Используем локальное имя файла
+    const fileName = input;
+    const sourcePath = path.join(targetDir, fileName);
+    
+    // Проверяем существование файла
+    if (!fs.existsSync(sourcePath)) {
+      console.log(c('yellow', `   ⚠️  Файл ${fileName} не найден в ${targetDir}/`));
+      console.log(c('dim', `   💡 Не забудь добавить его перед деплоем!`));
+    } else {
+      console.log(c('green', `   ✓ Файл ${fileName} найден`));
+    }
+    
+    return fileName;
+  }
+}
+
+/**
+ * Скачивает изображение по URL
+ */
+function downloadImage(url, targetPath) {
+  return new Promise((resolve, reject) => {
+    const client = url.startsWith('https') ? https : http;
+    
+    client.get(url, (response) => {
+      // Следуем редиректам
+      if (response.statusCode === 301 || response.statusCode === 302) {
+        return downloadImage(response.headers.location, targetPath)
+          .then(resolve)
+          .catch(reject);
+      }
+      
+      if (response.statusCode !== 200) {
+        reject(new Error(`Не удалось скачать: ${response.statusCode}`));
+        return;
+      }
+      
+      const fileStream = fs.createWriteStream(targetPath);
+      response.pipe(fileStream);
+      
+      fileStream.on('finish', () => {
+        fileStream.close();
+        resolve();
+      });
+      
+      fileStream.on('error', (err) => {
+        fs.unlink(targetPath, () => {});
+        reject(err);
+      });
+    }).on('error', reject);
+  });
+}
+
+/**
+ * Определяет расширение файла из URL
+ */
+function getExtensionFromUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    const match = pathname.match(/\.([a-z0-9]+)$/i);
+    if (match) {
+      const ext = match[1].toLowerCase();
+      // Поддерживаемые форматы
+      if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) {
+        return ext;
+      }
+    }
+  } catch {
+    // ignore
+  }
+  return null;
 }
 
 // Запуск

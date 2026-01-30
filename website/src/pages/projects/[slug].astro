@@ -52,10 +52,14 @@ const formatSchemaDate = (dateStr?: string) => {
 // Determine work type for schema
 const workTypeMap = {
   website: 'WebSite' as const,
-  app: 'SoftwareApplication' as const,
-  library: 'SoftwareApplication' as const,
+  'mobile-app': 'MobileApplication' as const,
+  'telegram-bot': 'SoftwareApplication' as const,
+  game: 'VideoGame' as const,
+  'desktop-app': 'SoftwareApplication' as const,
+  library: 'SoftwareSourceCode' as const,
   tool: 'SoftwareApplication' as const,
   template: 'CreativeWork' as const,
+  api: 'WebAPI' as const,
   other: 'CreativeWork' as const,
 };
 const schemaWorkType = workTypeMap[data.type || 'other'];

@@ -55,11 +55,29 @@ const statusConfig = {
 // Type labels
 const typeLabels = {
   website: 'Веб-сайт',
-  app: 'Приложение',
+  'mobile-app': 'Мобильное приложение',
+  'telegram-bot': 'Telegram бот',
+  game: 'Игра',
+  'desktop-app': 'Десктоп приложение',
   library: 'Библиотека',
   tool: 'Инструмент',
   template: 'Шаблон',
+  api: 'API',
   other: 'Проект',
+} as const;
+
+// Type icons (lucide icons)
+const typeIcons = {
+  website: 'globe',
+  'mobile-app': 'smartphone',
+  'telegram-bot': 'bot',
+  game: 'gamepad-2',
+  'desktop-app': 'monitor',
+  library: 'package',
+  tool: 'wrench',
+  template: 'layout-template',
+  api: 'server',
+  other: 'folder',
 } as const;
 
 // Format date
@@ -74,6 +92,7 @@ const formatDate = (dateStr?: string) => {
 
 const currentStatus = statusConfig[data.status || 'completed'];
 const projectType = typeLabels[data.type || 'other'];
+const projectIcon = typeIcons[data.type || 'other'];
 const startDate = formatDate(data.date);
 const completedDate = formatDate(data.completedDate);
 
@@ -210,12 +229,13 @@ const metaItems = [
               {currentStatus.label}
             </span>
             <span class={cn(
-              'inline-flex items-center px-3 py-1',
+              'inline-flex items-center gap-1.5 px-3 py-1',
               'text-xs font-medium rounded-full',
               'bg-[var(--color-bg-glass)]',
               'border border-[var(--color-border-glass)]',
               'text-[var(--color-text-muted)]'
             )}>
+              <Icon name={projectIcon} size="xs" />
               {projectType}
             </span>
             {data.featured && (

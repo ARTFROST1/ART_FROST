@@ -1,0 +1,37 @@
+{
+  "title": "SpecsVibeCode",
+  "description": "Веб-сервис Specs Vibecode автоматизирует генерацию полного набора проектной документации с помощью AI. Пользователь описывает идею продукта, отвечает на 10 уточняющих вопросов — система генерирует PRD как источник истины, а затем на его основе создаёт все производные документы (API-спецификации, юзкейсы, архитектуру и т.д.).",
+  "shortDescription": "AI-платформы для автоматической генерации проектной документации.",
+  "image": "/assets/images/projects/specsvibecode/1.png",
+  "images": [
+    "/assets/images/projects/specsvibecode/2.png"
+  ],
+  "tags": [
+    "Ruby",
+    "Rails",
+    "Hotwire",
+    "Tailwind CSS",
+    "Solid Queue",
+    "Puma",
+    "Jobs",
+    "AI functions",
+    "Render"
+  ],
+  "github": "https://github.com/ARTFROST1/SpecsVibeCode",
+  "demo": "https://www.specs-vibecode.tech/",
+  "featured": true,
+  "order": 107,
+  "date": "2026-01",
+  "status": "completed",
+  "type": "website",
+  "role": "Full-Stack Developer",
+  "highlights": [
+    "ИИ генерация < 5 минут",
+    "стильный дизайн",
+    "отзывчивый интерфейс",
+    "быстрая авторизация с Google",
+    "Оплата с российских карт",
+    "умные подсказки при ответе на вопросы перед генерацией"
+  ],
+  "draft": false
+}

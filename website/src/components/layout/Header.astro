@@ -88,21 +88,25 @@ const containerStyles = cn(
         class={cn(
           'lg:hidden', // Скрываем на больших экранах
           'relative inline-flex items-center justify-center',
-          'h-10 w-10 rounded-xl',
-          'border border-[var(--color-border-glass-strong)]',
-          'bg-[var(--color-bg-glass)] backdrop-blur-md',
+          'h-11 w-11 rounded-xl',
+          'border border-[var(--color-border-glass)]',
+          'bg-[var(--color-bg-glass)] backdrop-blur-xl',
           'text-[var(--color-text-heading)]',
-          'transition-all duration-200',
+          'transition-all duration-300',
           'hover:bg-[var(--color-bg-glass-strong)]',
-          '[html[data-theme="light"]_&]:hover:bg-black/8',
-          'focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]'
+          'hover:border-[var(--color-primary)]/30',
+          'hover:text-[var(--color-primary)]',
+          'hover:shadow-[0_0_24px_-8px_var(--color-primary-glow)]',
+          '[html[data-theme="light"]_&]:bg-black/5',
+          '[html[data-theme="light"]_&]:hover:bg-black/10',
+          'focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/35'
         )}
         aria-expanded="false"
         aria-controls="mobile-menu"
         aria-label="Открыть меню"
       >
-        <Icon name="menu" size="md" class="menu-icon" />
-        <Icon name="x" size="md" class="close-icon hidden" />
+        <Icon name="menu" size="md" class="menu-icon transition-transform duration-200" />
+        <Icon name="x" size="md" class="close-icon hidden transition-transform duration-200" />
       </button>
     </div>
   </div>

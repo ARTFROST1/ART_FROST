@@ -13,6 +13,7 @@ import BaseLayout from './BaseLayout.astro';
 import SEOHead from '@components/seo/SEOHead.astro';
 import Header from '@components/layout/Header.astro';
 import Footer from '@components/layout/Footer.astro';
+import { MobileMenu } from '@components/layout/MobileMenu';
 
 interface Props {
   /** Page title */
@@ -61,6 +62,9 @@ const currentPath = Astro.url.pathname;
 
   <!-- Header -->
   <Header currentPath={currentPath} />
+
+  <!-- Mobile Menu -->
+  <MobileMenu currentPath={currentPath} client:media="(max-width: 1023px)" />
 
   <!-- Main Content -->
   <main

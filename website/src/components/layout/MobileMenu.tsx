@@ -108,9 +108,10 @@ export function MobileMenu({ currentPath }: MobileMenuProps) {
       id="mobile-menu"
       className={cn(
         'fixed inset-0 z-40',
-        'bg-[var(--color-bg-primary)]/95 backdrop-blur-xl',
+        'bg-[var(--color-bg-primary)]/98 backdrop-blur-2xl',
         'flex flex-col',
-        'transition-opacity duration-200'
+        'transition-all duration-300 ease-out',
+        'animate-in fade-in slide-in-from-top-4'
       )}
       role="dialog"
       aria-modal="true"
@@ -119,18 +120,34 @@ export function MobileMenu({ currentPath }: MobileMenuProps) {
       {/* Menu Content */}
       <div className="flex-1 flex flex-col justify-center px-8 pt-16">
         {/* Navigation Links */}
-        <nav className="space-y-2" aria-label="Мобильная навигация">
+        <nav className="space-y-3" aria-label="Мобильная навигация">
           {navItems.map((item, index) => (
             <a
               key={item.href}
               href={item.href}
               onClick={closeMenu}
               className={cn(
-                'block py-4 px-4 text-2xl font-semibold rounded-xl',
-                'transition-all duration-200',
+                'block py-5 px-6 text-2xl font-semibold rounded-2xl',
+                'transition-all duration-300',
+                'border backdrop-blur-xl',
                 isActive(item.href)
-                  ? 'text-[var(--color-primary)] bg-[var(--color-primary)]/10'
-                  : 'text-[var(--color-text-heading)] hover:bg-white/5 hover:text-[var(--color-primary)]'
+                  ? [
+                      'text-[var(--color-primary)]',
+                      'bg-[var(--color-bg-glass)]',
+                      'border-[var(--color-border-glass)]',
+                      'shadow-[0_0_40px_-10px_var(--color-primary-glow)]',
+                      '[html[data-theme="light"]_&]:bg-black/5',
+                    ]
+                  : [
+                      'text-[var(--color-text-heading)]',
+                      'bg-transparent',
+                      'border-transparent',
+                      'hover:bg-[var(--color-bg-glass)]',
+                      'hover:border-[var(--color-border-glass)]',
+                      'hover:text-[var(--color-primary)]',
+                      'hover:shadow-[0_0_30px_-15px_var(--color-primary-glow)]',
+                      '[html[data-theme="light"]_&]:hover:bg-black/5',
+                    ]
               )}
               style={{ animationDelay: `${index * 50}ms` }}
               aria-current={isActive(item.href) ? 'page' : undefined}
@@ -141,18 +158,20 @@ export function MobileMenu({ currentPath }: MobileMenuProps) {
         </nav>
 
         {/* CTA Button */}
-        <div className="mt-8" style={{ animationDelay: '200ms' }}>
+        <div className="mt-10" style={{ animationDelay: '200ms' }}>
           <a
             href="https://t.me/artfrost"
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              'block w-full py-4 px-6 text-center text-lg font-semibold',
-              'rounded-xl text-white',
+              'block w-full py-5 px-6 text-center text-lg font-semibold',
+              'rounded-2xl text-white',
               'bg-gradient-to-r from-[var(--color-gradient-start)] to-[var(--color-gradient-end)]',
-              'shadow-[0_0_40px_-10px_var(--color-primary-glow)]',
-              'transition-all duration-200',
-              'hover:scale-[1.02] active:scale-[0.98]'
+              'shadow-[0_0_50px_-10px_var(--color-primary-glow),0_8px_24px_-8px_rgba(0,0,0,0.3)]',
+              'border border-[var(--color-primary)]/20',
+              'transition-all duration-300',
+              'hover:scale-[1.03] hover:shadow-[0_0_60px_-5px_var(--color-primary-glow),0_12px_32px_-8px_rgba(0,0,0,0.4)]',
+              'active:scale-[0.97]'
             )}
             onClick={closeMenu}
           >
@@ -162,7 +181,7 @@ export function MobileMenu({ currentPath }: MobileMenuProps) {
       </div>
 
       {/* Footer with Social Links */}
-      <div className="px-8 pb-8" style={{ animationDelay: '250ms' }}>
+      <div className="px-8 pb-10" style={{ animationDelay: '250ms' }}>
         <div className="flex justify-center gap-4">
           {socialLinks.map((link) => (
             <a
@@ -172,12 +191,17 @@ export function MobileMenu({ currentPath }: MobileMenuProps) {
               rel="noopener noreferrer"
               className={cn(
                 'flex items-center justify-center',
-                'w-12 h-12 rounded-full',
-                'bg-white/5 border border-[var(--color-border-glass)]',
+                'w-14 h-14 rounded-2xl',
+                'bg-[var(--color-bg-glass)] backdrop-blur-xl',
+                'border border-[var(--color-border-glass)]',
                 'text-[var(--color-text-muted)]',
-                'transition-all duration-200',
-                'hover:bg-white/10 hover:text-[var(--color-primary)]',
-                'hover:border-[var(--color-primary)]/50'
+                'transition-all duration-300',
+                'hover:bg-[var(--color-bg-glass-strong)] hover:text-[var(--color-primary)]',
+                'hover:border-[var(--color-primary)]/50',
+                'hover:shadow-[0_0_30px_-12px_var(--color-primary-glow)]',
+                'hover:scale-110',
+                '[html[data-theme="light"]_&]:bg-black/5',
+                '[html[data-theme="light"]_&]:hover:bg-black/10'
               )}
               aria-label={link.label}
             >
